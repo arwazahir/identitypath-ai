@@ -1,242 +1,256 @@
 ﻿import streamlit as st
 import time
 
-st.set_page_config(page_title="IdentityPath AI App", page_icon="🧭", layout="wide", initial_sidebar_state="collapsed")
+# Configuration stricte de l'application
+st.set_page_config(page_title="IdentityPath Application", page_icon="🧭", layout="wide", initial_sidebar_state="collapsed")
 
-# --- DESIGN PREMIUM REVISITÉ ---
+# --- DESIGN APPLICATION PRO & VISIBILITÉ MAXIMALE ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;800&family=Inter:wght@400;500;600&display=swap');
-    .main { background-color: #0f172a; color: #f8fafc; }
+    
+    /* Couleurs de l'application */
+    .main { background-color: #0f172a; color: #ffffff; }
     html, body, [data-testid="stAppViewContainer"] { background-color: #0f172a; font-family: 'Inter', sans-serif; }
-    h1, h2, h3, h4 { font-family: 'Urbanist', sans-serif; color: #ffffff !important; }
-    .brand-header { text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; border: 1px solid #334155; margin-bottom: 25px; }
-    .brand-logo { font-size: 42px; font-weight: 800; background: linear-gradient(90deg, #3b82f6, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .card-dashboard { background: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #334155; margin-bottom: 20px; }
-    .uni-card { background: #111827; padding: 20px; border-radius: 12px; border-left: 5px solid #3b82f6; margin-bottom: 15px; border-top: 1px solid #1f2937; border-right: 1px solid #1f2937; border-bottom: 1px solid #1f2937; }
-    .bourse-card { background: #111827; padding: 20px; border-radius: 12px; border-left: 5px solid #10b981; margin-bottom: 15px; border-top: 1px solid #1f2937; border-right: 1px solid #1f2937; border-bottom: 1px solid #1f2937; }
-    .badge-blue { background: #1e3a8a; color: #93c5fd; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-block; }
-    .badge-green { background: #064e3b; color: #a7f3d0; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-block; }
-    .stButton>button { background: linear-gradient(90deg, #3b82f6, #10b981) !important; color: white !important; font-weight: bold !important; border-radius: 12px !important; padding: 10px 25px !important; border: none !important; }
+    
+    /* Force TOUS les textes Streamlit standards à être blancs et parfaitement lisibles */
+    .stMarkdown, p, span, label, .stSelectbox, .stSlider { color: #ffffff !important; font-size: 16px !important; }
+    h1, h2, h3, h4 { font-family: 'Urbanist', sans-serif; color: #ffffff !important; font-weight: 800 !important; }
+    
+    /* Le Logo de l'Application */
+    .app-logo-container { text-align: center; padding: 20px; background: #1e293b; border-radius: 16px; border: 2px solid #334155; margin-bottom: 25px; }
+    .app-logo { font-size: 38px; font-weight: 800; background: linear-gradient(90deg, #3b82f6, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Urbanist'; }
+    .app-subtitle { color: #10b981 !important; font-size: 15px !important; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+    
+    /* Cartes Universités & Bourses hyper contrastées */
+    .card-uni { background: #1e293b; padding: 22px; border-radius: 12px; border-left: 6px solid #3b82f6; margin-bottom: 15px; border-top: 1px solid #475569; border-right: 1px solid #475569; border-bottom: 1px solid #475569; }
+    .card-bourse { background: #1e293b; padding: 22px; border-radius: 12px; border-left: 6px solid #10b981; margin-bottom: 15px; border-top: 1px solid #475569; border-right: 1px solid #475569; border-bottom: 1px solid #475569; }
+    
+    .title-item { font-size: 20px !important; font-weight: 700 !important; color: #ffffff !important; margin-bottom: 8px; }
+    .text-item { color: #f1f5f9 !important; font-size: 15px !important; line-height: 1.5; }
+    .badge-tag { background: #334155; color: #ffffff !important; padding: 5px 12px; border-radius: 6px; font-size: 13px !important; font-weight: bold; display: inline-block; margin-top: 8px; border: 1px solid #475569; }
+    
+    /* Boutons de l'application */
+    .stButton>button { background: linear-gradient(90deg, #3b82f6, #10b981) !important; color: #ffffff !important; font-weight: bold !important; border-radius: 10px !important; padding: 12px 28px !important; border: none !important; width: 100%; font-size: 16px !important; }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="brand-header"><div class="brand-logo">🧭 IDENTITYPATH APP</div><div style="color: #94a3b8; font-size: 16px;">Moteur d\'Analyse Globale & Cartographie des Bourses Internationales</div></div>', unsafe_allow_html=True)
+# --- EN-TÊTE ET LOGO OFFICIEL DE L'APPLICATION ---
+st.markdown("""
+    <div class="app-logo-container">
+        <div class="app-logo">🧭 IDENTITYPATH APP</div>
+        <div class="app-subtitle">Moteur d'Analyse Universel & Algorithme de Bourses d'Excellence</div>
+    </div>
+""", unsafe_allow_html=True)
 
-# --- ACCÈS SÉCURISÉ ---
-if "auth" not in st.session_state: st.session_state.auth = False
-if not st.session_state.auth:
+# --- SÉCURISATION DU PRODUIT ---
+if "app_auth" not in st.session_state: st.session_state.app_auth = False
+if not st.session_state.app_auth:
     col_l, col_m, col_r = st.columns([1, 2, 1])
     with col_m:
         st.markdown("<h3 style='text-align: center;'>🔒 Activation de l'Application</h3>", unsafe_allow_html=True)
-        code = st.text_input("Entrez votre code d'accès IdentityPath :", type="password")
+        code = st.text_input("Veuillez entrer le code d'accès étudiant :", type="password")
         if code == "Arwagiftorient":
-            if st.button("Ouvrir la Console d'Orientation 🚀"):
-                st.session_state.auth = True
+            if st.button("Lancer l'Application 🚀"):
+                st.session_state.app_auth = True
                 st.rerun()
     st.stop()
 
-# --- BASE DE DONNÉES EXPERTE (UNIVERSITÉS + BOURSES + DETAILS) ---
-DATA_ENGINE = {
-    "tech": {
+# --- BASE DE DONNÉES GLOBALE ET NEUTRE ---
+APP_DATABASE = {
+    "sciences_tech": {
+        "label": "Ingénierie, Intelligence Artificielle & Technologies",
+        "keywords": ["informatique", "code", "ia", "cyber", "ingenieur", "robot", "technologie", "math", "physique"],
         "unis": [
-            {"nom": "UM6P - Benguerir (Maroc)", "filiere": "School of Computer Science / 1337", "req": "Moyenne > 16/20, Bac SM ou PC, tests de logique internes.", "deadline": "Fin Mai / Début Juin"},
-            {"nom": "EPFL (Suisse)", "filiere": "Bachelor in Computer Science", "req": "Moyenne générale au Bac ≥ 16/20 (Mention TB) en filière scientifique.", "deadline": "30 Avril"},
-            {"nom": "University of Toronto (Canada)", "filiere": "Faculty of Applied Science & Engineering", "req": "IELTS ≥ 6.5 ou TOEFL ≥ 100, Moyenne forte en Maths/Physique.", "deadline": "15 Janvier"}
+            {"nom": "UM6P (Université Mohammed VI Polytechnique)", "filiere": "School of Computer Science", "req": "Moyenne élevée au Bac scientifique, examen de sélection écrit et oral.", "deadline": "Mai - Juin"},
+            {"nom": "EPFL (Suisse)", "filiere": "Bachelor en Sciences Informatiques", "req": "Moyenne au Baccalauréat ≥ 16/20 (Mention Très Bien obligatoire).", "deadline": "30 Avril"},
+            {"nom": "University of Toronto (Canada)", "filiere": "Faculty of Engineering", "req": "Score IELTS ≥ 6.5 ou TOEFL ≥ 100, solides bases en mathématiques.", "deadline": "15 Janvier"}
         ],
         "bourses": [
-            {"nom": "Bourse d'Excellence UM6P", "couverture": "Exonération 100% des frais de scolarité + logement", "req": "Critères sociaux + Mention Très Bien au Bac.", "deadline": "Juillet"},
-            {"nom": "Lester B. Pearson International Scholarship (Canada)", "couverture": "Frais de scolarité complets, livres, résidence pendant 4 ans", "req": "IELTS/TOEFL excellent, Profil de leader exceptionnel, nomination par le lycée, Awards extra-scolaires.", "deadline": "15 Janvier"}
+            {"nom": "Bourse d'Excellence Académique UM6P", "couverture": "Prise en charge de 100% des frais pédagogiques et du logement.", "req": "Dossier académique majeur et critères sociaux.", "deadline": "Juillet"},
+            {"nom": "Lester B. Pearson Scholarship (Canada)", "couverture": "Frais de scolarité complets, hébergement et livres pendant 4 ans.", "req": "Excellence académique globale, lettre de nomination officielle de l'école.", "deadline": "15 Janvier"}
         ]
     },
-    "business": {
+    "business_finance": {
+        "label": "Management, Sciences Économiques & Entrepreneuriat",
+        "keywords": ["business", "management", "commerce", "finance", "marketing", "economie", "gestion"],
         "unis": [
-            {"nom": "ISCAE Casablanca (Maroc)", "filiere": "Grande École de Commerce", "req": "Concours écrit + oral après Classes Préparatoires ou Licence.", "deadline": "Avril (Prépa)"},
-            {"nom": "HEC Paris (France)", "filiere": "BSc in Data, Society and Organisations / Cursus Grande École", "req": "Dossier académique d'élite, Score SAT/ACT recommandé, Entretien de motivation.", "deadline": "Plusieurs sessions (Octobre à Mars)"},
-            {"nom": "Wharton School - University of Pennsylvania (USA)", "filiere": "Bachelor of Science in Economics", "req": "SAT (1500+ conseillé), TOEFL/IELTS, 2 à 3 lettres de recommandation, Essais.", "deadline": "1 Novembre (Early) / 5 Janvier (Regular)"}
+            {"nom": "ISCAE (Institut Supérieur de Commerce)", "filiere": "Management & Commerce International", "req": "Sélection sur concours national après les classes préparatoires.", "deadline": "Avril / Mai"},
+            {"nom": "HEC Paris (France)", "filiere": "BSc in Data, Society and Organisations", "req": "Dossier scolaire de premier rang, lettre de motivation et entretien.", "deadline": "Sessions de Octobre à Mars"},
+            {"nom": "Wharton School (University of Pennsylvania - USA)", "filiere": "Bachelor of Science in Economics", "req": "Dossier global d'excellence (SAT/ACT, essais, recommandations).", "deadline": "5 Janvier"}
         ],
         "bourses": [
-            {"nom": "Bourses de la Fondation HEC Paris", "couverture": "Réduction importante ou totale des frais de scolarité", "req": "Admis au programme + critères d'excellence et de diversité internationale.", "deadline": "Lors de l'admission"},
-            {"nom": "Penn World Scholars (USA)", "couverture": "Aide financière sur mesure pouvant couvrir la totalité du cursus", "req": "Potentiel de leadership mondial, profil académique d'exception, engagements associatifs.", "deadline": "Automne lors du dépôt du dossier"}
+            {"nom": "Bourse d'Excellence de la Fondation HEC", "couverture": "Exonération partielle à totale des frais annuels de scolarité.", "req": "Attribuée automatiquement lors de l'admission aux profils majeurs.", "deadline": "Lors de l'admission"},
+            {"nom": "Penn World Scholars Program (USA)", "couverture": "Aide financière sur mesure indexée sur les besoins du profil.", "req": "Potentiel de leadership international avéré et engagement citoyen.", "deadline": "Lors du dépôt de candidature"}
         ]
     },
-    "sante": {
+    "medical_sante": {
+        "label": "Sciences Médicales, Biologie & Santé",
+        "keywords": ["medecine", "sante", "dentaire", "pharma", "biologie", "chirurgie", "clinique", "soin"],
         "unis": [
-            {"nom": "Facultés de Médecine et de Pharmacie (FMP Maroc)", "filiere": "Médecine Générale / Dentaire", "req": "Seuil de présélection (Note Bac) + Concours national écrit.", "deadline": "Juillet"},
-            {"nom": "Université Paris Cité (France)", "filiere": "Parcours Accès Santé (PASS)", "req": "Excellent dossier sur Parcoursup, fortes notes en SVT/Physique.", "deadline": "Début Mars"},
-            {"nom": "King's College London (UK)", "filiere": "Medicine MBBS", "req": "IELTS ≥ 7.0, examen UCAT obligatoire, 3 matières scientifiques fortes au Bac.", "deadline": "15 Octobre"}
+            {"nom": "Facultés de Médecine et de Pharmacie (Public)", "filiere": "Médecine Générale / Odontologie", "req": "Présélection nationale basée sur la note du Bac + Concours écrit.", "deadline": "Juillet"},
+            {"nom": "Université Paris Cité (France)", "filiere": "Parcours Accès Santé (PASS)", "req": "Sélection rigoureuse sur dossier Parcoursup (Spécialités scientifiques).", "deadline": "Début Mars"},
+            {"nom": "King's College London (UK)", "filiere": "Medicine MBBS", "req": "IELTS ≥ 7.0, réussite à l'examen clinique britannique UCAT.", "deadline": "15 Octobre"}
         ],
         "bourses": [
-            {"nom": "Bourse du Gouvernement Français (Eiffel / Universités)", "couverture": "Allocation mensuelle + prise en charge des frais de couverture médicale", "req": "Dossier académique d'élite, réservé aux étudiants internationaux brillants.", "deadline": "Janvier"},
-            {"nom": "King's International Scholarships", "couverture": "Réduction de £10,000 par an sur les frais de scolarité", "req": "Avoir une offre d'admission, essais spécifiques sur le projet professionnel.", "deadline": "Fin Avril"}
-        ]
-    },
-    "art": {
-        "unis": [
-            {"nom": "ENA (École Nationale d'Architecture Maroc)", "filiere": "Architecture et Urbanisme", "req": "Sélection stricte sur moyenne nationale du Bac + Concours écrit d'art/géométrie.", "deadline": "Fin Juin"},
-            {"nom": "Parsons School of Design (New York, USA)", "filiere": "BFA in Communication Design / Architecture", "req": "Portfolio artistique complet (15-20 images), TOEFL ≥ 92 / Duolingo ≥ 115, Essais.", "deadline": "15 Janvier"},
-            {"nom": "Central Saint Martins (Londres, UK)", "filiere": "BA Graphic Communication Design", "req": "Portfolio innovant, IELTS ≥ 6.0, entretien vidéo.", "deadline": "25 Janvier"}
-        ],
-        "bourses": [
-            {"nom": "Parsons Merit-Based Scholarship", "couverture": "Couverture partielle à totale des frais de scolarité complexes", "req": "Attribuée automatiquement aux meilleurs portfolios et dossiers académiques.", "deadline": "Lors de l'application"},
-            {"nom": "Bourses du British Council (Great Scholarships)", "couverture": "Financement d'une année d'études d'un montant de £10,000", "req": "Étudiant marocain accepté dans une université britannique partenaire.", "deadline": "Mai"}
+            {"nom": "Bourse Eiffel d'Excellence (France)", "couverture": "Allocation mensuelle fixe et prise en charge des frais de transport.", "req": "Profil international d'élite présenté par une université française.", "deadline": "Janvier"},
+            {"nom": "King's International Scholarship Awards", "couverture": "Réduction significative sur les frais de scolarité internationaux.", "req": "Dossier d'admission validé et rédaction d'un essai de recherche.", "deadline": "Fin Avril"}
         ]
     }
 }
 
-# --- SYSTÈME D'APPLICATION EN ÉTAPES ---
-if "app_step" not in st.session_state: st.session_state.app_step = 1
+# --- NAVIGATION DE L'APPLICATION ---
+if "step" not in st.session_state: st.session_state.step = 1
 
-# Barre de progression
-st.progress(st.session_state.app_step / 4)
+# Barre d'avancement
+st.progress(st.session_state.step / 4)
 
-# ÉTAPE 1 : PROFIL ACADÉMIQUE STANDARD
-if st.session_state.app_step == 1:
-    st.markdown("### 📊 Étape 1 : Identité Académique & Géographique")
+# ÉTAPE 1 : PROFIL ACADÉMIQUE
+if st.session_state.step == 1:
+    st.markdown("### 📝 Étape 1 : Situation Académique globale")
+    
     col1, col2 = st.columns(2)
     with col1:
-        st.session_state.f_bac = st.selectbox("Filière de votre Baccalauréat :", ["Sciences Mathématiques (SM)", "Sciences Physiques (PC)", "Sciences Économiques", "SVT", "Lettres"])
-        st.session_state.moyenne = st.slider("Moyenne générale estimée ou obtenue :", 10.0, 20.0, 16.0, step=0.1)
+        st.session_state.filiere_bac = st.selectbox("Série ou filière du diplôme préparé :", ["Sciences Mathématiques", "Sciences Physiques et Chimiques", "Sciences Économiques & Gestion", "Sciences de la Vie et de la Terre", "Lettres & Sciences Humaines"])
+        st.session_state.note = st.slider("Note globale moyenne estimée (sur 20) :", 10.0, 20.0, 15.5, step=0.1)
     with col2:
-        st.session_state.destination = st.selectbox("Où souhaitez-vous étudier ?", ["International Anglophone (USA, Canada, UK)", "Europe Francophone (France, Suisse, Belgique)", "Maroc (Grandes Écoles de prestige)", "Partout où il y a des bourses intégrales"])
-        st.session_state.lycee = st.text_input("Nom de votre lycée et ville :", placeholder="Ex: Lycée Lyautey, Casablanca")
-    
-    if st.button("Continuer vers l'analyse des langues ➡️"):
-        st.session_state.app_step = 2
+        st.session_state.zone = st.selectbox("Objectif géographique prioritaire :", ["Monde Anglophone (USA, Canada, UK)", "Europe (France, Suisse, Belgique)", "Établissements Nationaux de Prestige"])
+        st.session_state.etablissement = st.text_input("Ville ou région actuelle de scolarisation :", placeholder="Ex: Casablanca, Rabat, Tanger...")
+        
+    if st.button("Étape Suivante : Évaluation Linguistique ➡️"):
+        st.session_state.step = 2
         st.rerun()
 
-# ÉTAPE 2 : TESTS DE LANGUES ET COMPÉTENCES
-elif st.session_state.app_step == 2:
-    st.markdown("### 🔤 Étape 2 : Certifications de Langue & Tests")
-    st.write("Les universités internationales exigent des preuves de niveau. Indiquez vos tests passés ou prévus.")
+# ÉTAPE 2 : CERTIFICATIONS DE LANGUE
+elif st.session_state.step == 2:
+    st.markdown("### 🔤 Étape 2 : Niveau de Langue & Certifications")
     
     col1, col2 = st.columns(2)
     with col1:
-        has_test = st.radio("Avez-vous déjà passé ou planifié un test d'anglais ?", ["Non, aucun pour l'instant", "Oui, l'IELTS", "Oui, le TOEFL", "Oui, le Duolingo English Test"])
+        test_type = st.radio("Disposez-vous d'une certification de langue anglaise ?", ["Aucun test pour le moment", "IELTS Academic", "TOEFL iBT", "Duolingo English Test"])
     with col2:
-        if has_test != "Non, aucun pour l'instant":
-            score = st.text_input("Quel est votre score (ou score visé) ?", placeholder="Ex: IELTS 7.5, Duolingo 125...")
-            st.session_state.lang_score = score
+        if test_type != "Aucun test pour le moment":
+            score_lang = st.text_input("Indiquez le score obtenu ou visé :", placeholder="Ex: IELTS 7.0, TOEFL 95...")
+            st.session_state.score_lang = score_lang
         else:
-            st.session_state.lang_score = "Aucun test planifié"
+            st.session_state.score_lang = "Aucun test disponible"
             
-    st.session_state.french_level = st.select_slider("Quel est votre niveau en Français ?", options=["Intermédiaire (B1)", "Avancé (B2)", "Autonome / Excellent (C1)", "Bilingue / Langue Maternelle (C2)"])
+    st.session_state.niveau_fr = st.select_slider("Niveau de maîtrise de la langue française :", options=["Intermédiaire (B1)", "Avancé (B2)", "Excellent / Autonome (C1)", "Bilingue / Maternelle (C2)"])
 
-    col_btn1, col_btn2 = st.columns([1, 5])
-    with col_btn1:
-        if st.button("⬅️ Retour"): st.session_state.app_step = 1; st.rerun()
-    with col_btn2:
-        if st.button("Continuer vers le Dossier d'Excellence ➡️"): st.session_state.app_step = 3; st.rerun()
+    c_b1, c_b2 = st.columns([1, 5])
+    with c_b1:
+        if st.button("⬅️ Étape Précédente"): st.session_state.step = 1; st.rerun()
+    with c_b2:
+        if st.button("Étape Suivante : Profil Extracourriculaire ➡️"): st.session_state.step = 3; st.rerun()
 
-# ÉTAPE 3 : AWARDS & EXTRA-SCOLAIRE (LA DIFFÉRENCE IDENTITYPATH)
-elif st.session_state.app_step == 3:
-    st.markdown("### 🏆 Étape 3 : Awards, Compétitions & Engagement Extra-Scolaire")
-    st.write("C'est ici que se gagnent les bourses internationales. Racontez vos accomplissements (Prix, concours, bénévolat, projets).")
+# ÉTAPE 3 : EXTRACURRICULAIRE NEUTRE & SANS EXEMPLES PERSONNELS
+elif st.session_state.step == 3:
+    st.markdown("### 🏆 Étape 3 : Distinctions, Projets & Compétitions")
+    st.write("Les critères de bourses internationales reposent sur les activités en dehors des cours. Indiquez vos éléments de manière générale.")
     
-    has_awards = st.checkbox("J'ai déjà remporté un prix, une compétition nationale/internationale ou un projet d'innovation.")
-    if has_awards:
-        awards_details = st.text_area("Détaillez vos Awards et Distinctions :", placeholder="Ex: 1er place compétition nationale d'innovation environnementale, projet de filtration écologique...")
-        st.session_state.awards = awards_details
-    else:
-        st.session_state.awards = "Aucun award mentionné"
-        
-    volunteer = st.text_area("Projets personnels ou bénévolat (Cooperatives, Design, Entrepreneuriat) :", placeholder="Ex: Création de contenu graphique bénévole pour des coopératives de femmes, gestion de projet digital...")
-    st.session_state.volunteer = volunteer
+    st.session_state.distinctions = st.text_area(
+        "Distinctions ou prix (Exemples généraux : Concours régionaux, Olympiades de mathématiques, compétitions scolaires...) :",
+        placeholder="Décrivez vos prix de façon factuelle si vous en possédez..."
+    )
+    
+    st.session_state.engagement = st.text_area(
+        "Engagements ou projets (Exemples généraux : Clubs de lycée, actions d'aide sociale, projets technologiques, activités de création numérique...) :",
+        placeholder="Décrivez vos projets et implications en dehors des salles de classe..."
+    )
 
-    st.markdown("#### 🎙️ Expression Libre (Optionnel)")
-    st.write("Utilisez le micro si vous préférez exprimer votre projet d'avenir à l'oral :")
+    st.markdown("#### 🎙️ Module d'Expression Libre")
+    st.write("Présentez votre projet à l'oral pour l'analyse textuelle de l'application :")
+    
     st.components.v1.html("""
-        <div style="background-color: #1e293b; border-radius: 12px; padding: 15px; text-align: center;">
-            <button id="mic" style="background: #ef4444; color: white; font-weight: bold; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer;">🎙️ Démarrer l'Écoute Vocale</button>
+        <div style="background-color: #1e293b; border-radius: 12px; padding: 15px; text-align: center; border: 1px dashed #475569;">
+            <button id="start-record" style="background: linear-gradient(90deg, #ef4444, #f43f5e); color: white; font-weight: bold; padding: 10px 22px; border: none; border-radius: 20px; cursor: pointer;">🎙️ ACTIVER LE MICROPHONE</button>
         </div>
         <script>
-            const btn = document.getElementById('mic');
+            const btn = document.getElementById('start-record');
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if(SpeechRecognition){
-                const r = new SpeechRecognition(); r.lang = 'fr-FR';
-                btn.onclick = () => { r.start(); btn.innerText = "⚡ Analyse en cours..."; };
-                r.onresult = (e) => { window.parent.postMessage({type: 'streamlit:set_input', value: e.results[0][0].transcript}, '*'); btn.innerText = "🎙️ Recommencer"; };
+                const rec = new SpeechRecognition(); rec.lang = 'fr-FR';
+                btn.onclick = () => { rec.start(); btn.innerText = "⏳ Analyse vocale active..."; };
+                rec.onresult = (e) => { window.parent.postMessage({type: 'streamlit:set_input', value: e.results[0][0].transcript}, '*'); btn.innerText = "🎙️ Relancer le micro"; };
             }
         </script>
-    """, height=90)
+    """, height=85)
     
-    captured_speech = st.text_input("Texte extrait de la voix (ou à taper) :", placeholder="Complétez votre profil de vive voix...")
+    st.session_state.vocal_text = st.text_input("Transcription automatique de la voix :", placeholder="Votre projet de vive voix s'affichera ici...")
 
-    col_btn1, col_btn2 = st.columns([1, 5])
-    with col_btn1:
-        if st.button("⬅️ Retour"): st.session_state.app_step = 2; st.rerun()
-    with col_btn2:
-        if st.button("Générer mon Itinéraire d'Excellence 🧭"):
-            st.session_state.speech = captured_speech
-            st.session_state.app_step = 4
-            st.rerun()
+    c_b1, c_b2 = st.columns([1, 5])
+    with c_b1:
+        if st.button("⬅️ Étape Précédente"): st.session_state.step = 2; st.rerun()
+    with c_b2:
+        if st.button("Générer l'Analyse d'Orientation Globale 🧭"): st.session_state.step = 4; st.rerun()
 
-# ÉTAPE 4 : CARTOGRAPHIE RAPPORT GLOBAL (UNIVERSITÉS + BOURSES + CRITÈRES)
-elif st.session_state.app_step == 4:
-    st.markdown("### 🧭 Rapport d'Analyse Identitaire Global")
-    st.write("Voici le diagnostic complet formulé par l'algorithme IdentityPath APP.")
+# ÉTAPE 4 : DIAGNOSTIC APPLICATION COMPLET
+elif st.session_state.step == 4:
+    st.markdown("### 🧭 Rapport Applicatif de Synthèse")
     
-    # Analyse croisée des mots-clés du profil
-    profil_text = (st.session_state.awards + " " + st.session_state.volunteer + " " + st.session_state.speech).lower()
+    # Analyse brute par l'algorithme
+    glob_text = (st.session_state.distinctions + " " + st.session_state.engagement + " " + st.session_state.vocal_text).lower()
     
-    detected_key = "business" # Par défaut
-    if any(w in profil_text for w in ["code", "tech", "informatique", "ia", "cyber", "ordinateur", "software"]):
-        detected_key = "tech"
-    elif any(w in profil_text for w in ["medecine", "sante", "docteur", "biologie", "soin", "clinique"]):
-        detected_key = "sante"
-    elif any(w in profil_text for w in ["art", "design", "architecture", "dessin", "graphisme", "creatif"]):
-        detected_key = "art"
+    detected_sector = "business_finance" # Valeur par défaut logique
+    if any(k in glob_text for k in ["code", "tech", "informatique", "ia", "cyber", "ingenieur", "robot"]):
+        detected_sector = "sciences_tech"
+    elif any(k in glob_text for k in ["medecine", "sante", "pharma", "dentaire", "biologie"]):
+        detected_sector = "medical_sante"
         
-    engine_data = DATA_ENGINE[detected_key]
+    data_res = APP_DATABASE[detected_sector]
     
-    # 1. TABLEAU DE BORD DE L'ÉLÈVE
-    st.markdown("<div class='card-dashboard'>", unsafe_allow_html=True)
-    st.write("#### 👤 Profil de l'Étudiant Analysé :")
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Bac visé", st.session_state.f_bac)
-    c2.metric("Moyenne estimée", f"{st.session_state.moyenne}/20")
-    c3.metric("Test Anglais", st.session_state.lang_score)
-    c4.metric("Niveau Français", st.session_state.french_level)
-    st.markdown("</div>", unsafe_allow_html=True)
+    # 1. VISUALISATION DU PROFIL DU CANDIDAT
+    st.markdown("#### 📊 Fiche Récapitulative de l'Étudiant")
+    col_f1, col_f2, col_f3, col_f4 = st.columns(4)
+    col_f1.metric("Diplôme Visé", st.session_state.filiere_bac)
+    col_f2.metric("Note Estimée", f"{st.session_state.note}/20")
+    col_f3.metric("Niveau Anglais", st.session_state.score_lang)
+    col_f4.metric("Niveau Français", st.session_state.niveau_fr)
     
-    # 2. SECTEUR D'ORIENTATION RECOMMANDÉ
-    st.success(f"💡 Secteur Majeur Détecté : {detected_key.upper()}")
+    st.markdown(f"**Filière Majeure Détectée par l'IA :** {data_res['label']}")
+    st.write("---")
     
-    # 3. AFFICHAGE DES UNIVERSITÉS PRÉCISES
-    st.write("### 🏛️ 1. Universités cibles & Requirements")
+    # 2. AFFICHAGE DES UNIVERSITES CIBLES
+    st.markdown("### 🏛️ 1. Établissements & Universités Recommandés")
     cols_u = st.columns(3)
-    for i, uni in enumerate(engine_data["unis"]):
-        with cols_u[i % 3]:
+    for index, uni in enumerate(data_res["unis"]):
+        with cols_u[index % 3]:
             st.markdown(f"""
-                <div class="uni-card">
-                    <div class="badge-blue">Filière : {uni['filiere']}</div>
-                    <div class="uni-title" style="margin-top:10px;">{uni['nom']}</div>
-                    <p style="font-size:14px; color:#cbd5e1;"><b>📋 Requirements :</b> {uni['req']}</p>
-                    <p style="font-size:14px; color:#f87171;"><b>⏰ Deadline :</b> {uni['deadline']}</p>
+                <div class="card-uni">
+                    <div class="title-item">{uni['nom']}</div>
+                    <p class="text-item"><b>📚 Cursus conseillé :</b> {uni['filiere']}</p>
+                    <p class="text-item"><b>📋 Conditions / Requirements :</b> {uni['req']}</p>
+                    <p class="text-item" style="color: #f87171 !important;"><b>📅 Date Limite / Deadline :</b> {uni['deadline']}</p>
+                    <div class="badge-tag">Université Cible</div>
                 </div>
             """, unsafe_allow_html=True)
             
-    # 4. AFFICHAGE DES BOURSES PRÉCISES
-    st.write("### 💎 2. Bourses d'Excellence Disponibles")
+    # 3. AFFICHAGE DES BOURSES DISPONIBLES
+    st.markdown("### 💎 2. Programmes de Bourses d'Études Associés")
     cols_b = st.columns(2)
-    for i, bourse in enumerate(engine_data["bourses"]):
-        with cols_b[i % 2]:
+    for index, bourse in enumerate(data_res["bourses"]):
+        with cols_b[index % 2]:
             st.markdown(f"""
-                <div class="bourse-card">
-                    <div class="badge-green">Type : {bourse['couverture']}</div>
-                    <div class="uni-title" style="margin-top:10px;">{bourse['nom']}</div>
-                    <p style="font-size:14px; color:#cbd5e1;"><b>🛠️ Qu'ajouter au dossier ?</b> {bourse['req']}</p>
-                    <p style="font-size:14px; color:#10b981;"><b>📅 Fin des candidatures :</b> {bourse['deadline']}</p>
+                <div class="card-bourse">
+                    <div class="title-item">{bourse['nom']}</div>
+                    <p class="text-item"><b>💰 Volume de couverture :</b> {bourse['couverture']}</p>
+                    <p class="text-item"><b>🛠️ Éléments à joindre au dossier :</b> {bourse['req']}</p>
+                    <p class="text-item" style="color: #34d399 !important;"><b>📅 Date Clôture :</b> {bourse['deadline']}</p>
+                    <div class="badge-tag">Financement Disponible</div>
                 </div>
             """, unsafe_allow_html=True)
             
-    # 5. RECOMMANDATION STRATÉGIQUE ADAPTEE AU JURY
-    st.write("### 📈 3. Conseils de notre Expert pour ton Dossier")
-    if st.session_state.awards != "Aucun award mentionné":
-        st.info("💡 **Stratégie d'Excellence Gagnante :** Votre profil contient déjà un Award ou un projet d'innovation. C'est votre plus grande force pour l'international (bourses Pearson ou USA). Vous devez rédiger vos essais de motivation en centrant toute votre histoire sur cet accomplissement et le lier à votre future filière.")
-    else:
-        st.warning("💡 **Conseil Dossier :** Pour maximiser vos chances d'obtenir les bourses internationales présentées ci-dessus, vous devez impérativement ajouter une activité extra-scolaire forte ou un projet d'innovation personnel avant la date limite d'inscription.")
+    # 4. FEUILLE DE ROUTE STRATÉGIQUE (LISIBLE ET CLAIRE)
+    st.markdown("### 📈 3. Directives Stratégiques du Moteur d'Orientation")
+    st.markdown("""
+        <div style="background-color: #1e293b; padding: 20px; border-radius: 10px; border: 1px solid #475569;">
+            <p style="color: #ffffff !important; margin-bottom: 10px;">• <b>Optimisation de la Moyenne :</b> Votre objectif de note doit rester stable pour franchir les seuils automatiques de présélection des dossiers internationaux.</p>
+            <p style="color: #ffffff !important; margin-bottom: 10px;">• <b>Planification des Certifications :</b> Si vous visez des destinations anglophones ou d'excellence, prévoyez de passer vos examens officiels (IELTS, TOEFL, Duolingo) au moins 3 mois avant les deadlines indiquées.</p>
+            <p style="color: #ffffff !important;">• <b>Valorisation du Dossier :</b> Veillez à documenter correctement chaque projet et chaque engagement afin de pouvoir rédiger des lettres de motivation percutantes pour les jurys de bourses.</p>
+        </div>
+    """, unsafe_allow_html=True)
+    st.write("")
 
-    if st.button("🔄 Lancer une nouvelle simulation d'application"):
-        st.session_state.app_step = 1
+    if st.button("🔄 Relancer un Diagnostic Applicatif"):
+        st.session_state.step = 1
         st.rerun()
