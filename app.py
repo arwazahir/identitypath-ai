@@ -72,6 +72,6 @@ elif st.session_state.step == 3:
     with col2:
         st.markdown(f"<div class='card'><h3>💰 Bourses & Requirements</h3>{', '.join(data['bourses'])}<br><br><b>Requirements :</b><br>• IELTS/TOEFL<br>• Lettre de motivation<br>• Relevés de notes officiels</div>", unsafe_allow_html=True)
     
-    if st.button("Relancer une analyse"):
+    if st.button("Relancer une analyse"): 
         st.session_state.step = 2
         st.rerun()
