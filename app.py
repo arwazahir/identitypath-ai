@@ -29,10 +29,9 @@ if not st.session_state.payment_done:
                     st.rerun()
             else:
                 st.error("Code promo invalide. Réessaie !")
-    st.stop() # Arrête le code ici tant que le paiement ou code n'est pas validé
+    st.stop()
 # --- FIN DU SYSTÈME DE PAIEMENT ---
 
-# Le reste de l'application s'affiche uniquement si payment_done est True
 st.sidebar.success("🎉 Mode Premium Activé !")
 voice_active = st.sidebar.checkbox("🔊 Activer la voix du robot", value=True)
 
@@ -41,13 +40,14 @@ if "step" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Bienvenue sur IdentityPath AI Premium. Commençons par le début : dans quelle ville ou lycée étudies-tu, et quelle est ta filière ou spécialisation actuelle (Sciences Maths, PC, SVT...) ?"}
+        {"role": "assistant", "content": "Bienvenue sur IdentityPath AI. Commençons par le début : dans quelle ville ou lycée étudies-tu, et quelle est ta filière actuelle ?"}
     ]
 
+# Réponses universelles qui s'adaptent à TOUS les profils
 RESPONSES = [
-    "C'est une excellente filière ! Avec des notes solides entre 17 et 18, tu as un dossier très prometteur. En dehors des cours, as-tu des projets ou des passions particulières ? Par exemple du graphisme, du bénévolat, ou des concours ?",
-    "C'est un profil impressionnant ! L'alliance entre tes compétences de création et ton parcours scientifique est parfaite pour des bourses internationales. Aimerais-tu t'orienter vers l'entrepreneuriat, les nouvelles technologies ou le business management ?",
-    "Parfait ! Pour viser ces parcours d'excellence à l'international à la rentrée prochaine, il faudra préparer ton dossier dès octobre/novembre (lettres de recommandation de tes profs, tests de langue ou SAT). Tu es prête à découvrir tes opportunités ?"
+    "C'est un excellent point de départ. Pour mieux t'orienter, quels sont tes domaines de prédilection ou tes passions en dehors des cours (sciences, arts, engagement social, sport...) ?",
+    "Profil très intéressant ! Avec ces éléments, préfères-tu t'orienter vers des domaines liés aux nouvelles technologies, au management et à l'entrepreneuriat, ou plutôt vers les sciences humaines et la création ?",
+    "Parfait ! Pour construire un dossier d'excellence (que ce soit pour l'échelle nationale ou internationale avec des bourses), il est crucial de préparer tes choix dès maintenant. Tu es prêt à découvrir les premières pistes adaptées à tes réponses ?"
 ]
 
 # --- AUDIO ---
@@ -111,7 +111,7 @@ if user_input := st.chat_input("Tape ou parle pour répondre..."):
             ai_text = RESPONSES[st.session_state.step]
             st.session_state.step += 1
         else:
-            ai_text = "Merci ! Ton profil IdentityPath est complété. Nous analysons tes réponses pour bâtir ton plan vers les bourses internationales."
+            ai_text = "Merci pour toutes ces précisions ! Ton profil d'orientation a été enregistré avec succès. Nous analysons tes choix pour te proposer le meilleur parcours."
         response_placeholder.write(ai_text)
     st.session_state.messages.append({"role": "assistant", "content": ai_text})
     st.rerun()
