@@ -1,325 +1,251 @@
 ﻿import streamlit as st
 import time
-import random
 
-# Configuration de l'écosystème
-st.set_page_config(page_title="IdentityPath OS", page_icon="🧭", layout="wide", initial_sidebar_state="collapsed")
+# Configuration Système d'ORION AI
+st.set_page_config(page_title="ORION AI — Future Architect", page_icon="🌌", layout="wide", initial_sidebar_state="collapsed")
 
-# --- STYLE INTERFACE PREMIUM (LISIBILITÉ MAXIMALE & GRAPHISME APPLICATIF) ---
+# --- INTERFACE PREMIUM ORION (DARK MODE SCI-FI, TEXTES ULTRA-LISIBLES) ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
     
-    .main { background-color: #0f172a; color: #ffffff; }
-    html, body, [data-testid="stAppViewContainer"] { background-color: #0f172a; font-family: 'Inter', sans-serif; }
+    .main { background-color: #0b0f19; color: #ffffff; }
+    html, body, [data-testid="stAppViewContainer"] { background-color: #0b0f19; font-family: 'Inter', sans-serif; }
     
-    /* Contrôle absolu de la visibilité des textes - Blanc éclatant obligatoire */
+    /* Visibilité maximale des textes */
     .stMarkdown, p, span, label, .stSelectbox, .stSlider, .stMultiSelect { color: #ffffff !important; font-size: 15px !important; }
-    h1, h2, h3, h4, h5 { font-family: 'Urbanist', sans-serif; color: #ffffff !important; font-weight: 800 !important; }
+    h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; color: #ffffff !important; font-weight: 700 !important; }
     
-    /* Header & Branding de l'OS */
-    .os-header { text-align: center; padding: 30px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; border: 2px solid #334155; margin-bottom: 30px; }
-    .os-title { font-size: 44px; font-weight: 800; background: linear-gradient(90deg, #3b82f6, #10b981, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Urbanist'; letter-spacing: -1px; }
-    .os-subtitle { color: #6366f1 !important; font-size: 13px !important; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
+    /* Design du Dashboard ORION */
+    .orion-banner { text-align: center; padding: 35px; background: linear-gradient(135deg, #1e1b4b 0%, #090514 100%); border-radius: 24px; border: 1px solid #4338ca; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(67, 56, 202, 0.15); }
+    .orion-title { font-size: 46px; font-weight: 700; background: linear-gradient(90deg, #6366f1, #38bdf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+    .orion-tagline { color: #38bdf8 !important; font-size: 13px !important; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
     
-    /* Les Piliers du Student DNA & Modules */
-    .dna-badge { background: #1e293b; border: 1px solid #475569; padding: 10px 15px; border-radius: 10px; margin: 5px; display: inline-block; }
-    .card-matrix { background: #1e293b; padding: 24px; border-radius: 16px; border: 1px solid #334155; margin-bottom: 20px; }
+    /* Cartes de simulation de trajectoires de vie */
+    .twin-box { background: #111827; padding: 22px; border-radius: 16px; border: 1px solid #1f2937; margin-bottom: 25px; }
+    .path-card { background: #1e2235; padding: 22px; border-radius: 16px; border-left: 6px solid #6366f1; margin-bottom: 18px; border-top: 1px solid #2e344d; border-right: 1px solid #2e344d; border-bottom: 1px solid #2e344d; }
+    .path-card.high { border-left-color: #34d399; }
+    .path-card.mid { border-left-color: #f59e0b; }
     
-    /* Composants de Score Universitaires Avançés */
-    .score-container { display: flex; justify-content: space-between; background: #111827; padding: 12px; border-radius: 8px; margin-top: 8px; border: 1px solid #1f2937; }
-    .score-box { text-align: center; width: 23%; }
-    .score-val { font-size: 20px !important; font-weight: 700; color: #3b82f6 !important; font-family: 'Urbanist'; }
-    .score-val.success { color: #10b981 !important; }
-    .score-val.warning { color: #6366f1 !important; }
-    .score-val.total { color: #f59e0b !important; }
-    .score-lbl { font-size: 11px !important; color: #94a3b8 !important; text-transform: uppercase; }
+    /* Éléments chiffrés et algorithmiques */
+    .prob-badge { float: right; background: rgba(99, 102, 241, 0.2); color: #818cf8 !important; padding: 6px 14px; border-radius: 30px; font-size: 14px !important; font-weight: bold; border: 1px solid #6366f1; }
+    .prob-badge.high { background: rgba(52, 211, 153, 0.2); color: #34d399 !important; border-color: #34d399; }
+    .prob-badge.mid { background: rgba(245, 158, 11, 0.2); color: #fbbf24 !important; border-color: #f59e0b; }
     
-    /* Boutons de l'OS */
-    .stButton>button { background: linear-gradient(90deg, #3b82f6, #6366f1) !important; color: #ffffff !important; font-weight: bold !important; border-radius: 12px !important; padding: 14px 28px !important; border: none !important; width: 100%; font-size: 16px !important; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); }
-    .stButton>button:hover { background: linear-gradient(90deg, #6366f1, #10b981) !important; }
+    /* Bouton d'action futuriste */
+    .stButton>button { background: linear-gradient(90deg, #6366f1, #38bdf8) !important; color: #ffffff !important; font-weight: bold !important; border-radius: 12px !important; padding: 15px 32px !important; border: none !important; width: 100%; font-size: 16px !important; letter-spacing: 0.5px; transition: all 0.3s ease; }
+    .stButton>button:hover { background: linear-gradient(90deg, #38bdf8, #34d399) !important; scale: 1.01; }
     
-    /* Rendu des terminaux et simulateurs */
-    .terminal-box { background: #090d16; padding: 18px; border-radius: 12px; border-left: 4px solid #10b981; font-family: 'Inter', monospace; margin-bottom: 15px; }
-    .story-output { background: #172554; padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; font-style: italic; color: #e2e8f0 !important; }
+    /* Terminal de croissance et d'essais */
+    .roadmap-month { background: #090d16; padding: 15px; border-radius: 10px; border-left: 3px solid #38bdf8; margin-bottom: 10px; }
+    .essay-box { background: #171e30; padding: 20px; border-radius: 14px; border: 1px dashed #38bdf8; margin-top: 15px; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- HEADER GLOBAL ---
+# --- PORTAL HEADER ---
 st.markdown("""
-    <div class="os-header">
-        <div class="os-title">🧭 IDENTITYPATH OPERATING SYSTEM</div>
-        <div class="os-subtitle">AI Career & Education Architecture • Multi-Student Engine</div>
+    <div class="orion-banner">
+        <div class="orion-title">🌌 ORION AI</div>
+        <div class="orion-tagline">An AI-Powered Future Navigation System for Global Education Access</div>
     </div>
 """, unsafe_allow_html=True)
 
-# --- BASE DE DONNÉES INTERNATIONALE MUTABLE ET NEUTRE ---
-GLOBAL_UNIS_POOL = [
-    {"nom": "Stanford University (USA)", "filiere": "BSc in Symbolic Systems / Computer Science", "base_match": 85, "environnement": "Silicon Valley tech hub, hautement compétitif.", "cout": "$82,000/an", "culture": "Innovation, Esprit startup"},
-    {"nom": "London School of Economics (LSE - UK)", "filiere": "BSc in Econometrics and Mathematical Economics", "base_match": 82, "environnement": "Centre financier de Londres, focus analytique.", "cout": "£38,000/an", "culture": "Recherche, Impact Public"},
-    {"nom": "UM6P (Université Mohammed VI Polytechnique - Maroc)", "filiere": "Integrated Bachelor-Master in Governance & Science", "base_match": 90, "environnement": "Écosystème d'excellence africain, recherche appliquée.", "cout": "Variables", "culture": "Entrepreneuriat, Impact Local"},
-    {"nom": "EPFL (Lausanne - Suisse)", "filiere": "Bachelor en Sciences et Technologies du Vivant / Informatique", "base_match": 80, "environnement": "Campus scientifique d'élite francophone.", "cout": "CHF 1,600/an", "culture": "Rigueur, Recherche pure"},
-    {"nom": "University of Toronto (Canada)", "filiere": "Faculty of Arts and Science - Commerce & Tech Liaison", "base_match": 84, "environnement": "Hub multiculturel nord-américain majeur.", "cout": "$65,000/an", "culture": "Diversité, Opportunités post-diplôme"},
-    {"nom": "McGill University (Canada)", "filiere": "Bachelor of Commerce (BCom) - Interdisciplinary Studies", "base_match": 81, "environnement": "Montréal, écosystème bilingue et dynamique.", "cout": "$58,000/an", "culture": "Leadership académique"}
-]
-
-# --- VÉRIFICATION SÉCURITÉ ACCÈS ---
-if "os_active" not in st.session_state: st.session_state.os_active = False
-if not st.session_state.os_active:
-    c_l, c_m, c_r = st.columns([1, 2, 1])
-    with c_m:
-        st.markdown("<h3 style='text-align: center;'>🔒 Connexion au Système Central</h3>", unsafe_allow_html=True)
-        key_input = st.text_input("Saisissez la clé d'activation OS :", type="password")
-        if key_input == "Arwagiftorient":
-            if st.button("Initialiser les 9 Piliers IA 🌐"):
-                st.session_state.os_active = True
+# --- SÉCURITÉ CONSOLE ---
+if "orion_auth" not in st.session_state: st.session_state.orion_auth = False
+if not st.session_state.orion_auth:
+    col_l, col_m, col_r = st.columns([1, 2, 1])
+    with col_m:
+        st.markdown("<h4 style='text-align: center;'>🔑 Activation de la Matrice d'Orientation</h4>", unsafe_allow_html=True)
+        key = st.text_input("Clé d'accès ORION OS :", type="password")
+        if key == "Arwagiftorient":
+            if st.button("Initialiser l'Architecture Prédictive 🚀"):
+                st.session_state.orion_auth = True
                 st.rerun()
     st.stop()
 
-# --- INITIALISATION DE LA NAVIGATION PAR PILIERS ---
-tabs = st.tabs([
-    "🧬 1. AI Student DNA", 
-    "📊 2 & 3. Matcher & Hunter", 
-    "📅 4. Application Manager", 
-    "✍️ 5. Essay Builder", 
-    "🚀 6. Career Simulator", 
-    "📡 7, 8 & 9. Radar, Gap & Network"
-])
+# --- INITIALISATION DE L'ÉTAT DU SYSTÈME ---
+if "engine_calculated" not in st.session_state: st.session_state.engine_calculated = False
 
 # ==============================================================================
-# PILIER 1 : LE PROFIL INTELLIGENT DE L'ÉTUDIANT (AI STUDENT DNA)
+# PHASE 1 : BLOC DE SÉLECTION GLOBAL & FLUIDE (STUDENT DIGITAL TWIN)
 # ==============================================================================
-with tabs[0]:
-    st.markdown("### 🧬 Pilier 1 : Générateur de Profil Universel (Student DNA Profile)")
-    st.write("Ce module collecte l'intégralité des variables de n'importe quel étudiant pour modéliser son empreinte unique.")
+if not st.session_state.engine_calculated:
+    st.markdown("### 🧬 Étape 1 : Initialisation du Student Digital Twin")
+    st.write("Renseignez l'intégralité des dimensions de l'étudiant pour modéliser ses futurs possibles.")
     
-    col_dna1, col_dna2 = st.columns(2)
-    with col_dna1:
-        st.markdown("##### 📈 Indicateurs Académiques & Matières")
-        filiere_actuelle = st.selectbox("Filière secondaire / Baccalauréat :", ["Sciences Mathématiques", "Sciences Économiques & Gestion", "Sciences Physiques et Chimiques", "Sciences de la Vie et de la Terre", "Lettres & Humain"])
-        note_generale = st.slider("Moyenne générale actuelle de l'élève (sur 20) :", 10.0, 20.0, 16.5)
-        mat_fortes = st.multiselect("Matières dominantes (fortes notes) :", ["Mathématiques", "Physique-Chimie", "Économie & Droit", "Philosophie / Littérature", "SVT", "Sciences de l'Ingénieur"])
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("##### 📊 Données Académiques & Options")
+        f_bac = st.selectbox("Option / Filière d'études actuelle :", ["Sciences Mathématiques (SM)", "Sciences Physiques et Chimiques (PC)", "Sciences Économiques & Gestion", "Sciences de la Vie et de la Terre (SVT)", "Lettres & Sciences Humaines"])
+        note_bac = st.slider("Moyenne générale projetée ou réelle (sur 20) :", 10.0, 20.0, 16.5, step=0.1)
         
-        st.markdown("##### 💼 Ambitions & Cibles Professionnelles")
-        metier_cible = st.text_input("Objectif de carrière ou métier visé :", placeholder="Ex: Entrepreneur en IA, Chirurgien, Data Analyst, Gestionnaire de Fonds...")
-        valeurs_eleve = st.multiselect("Valeurs fondamentales de l'élève :", ["Innovation technologique", "Impact environnemental", "Recherche scientifique", "Entrepreneuriat", "Impact social & humanitaire"])
+        # Gestion dynamique et exhaustive des matières fortes
+        mat_options = ["Mathématiques", "Physique-Chimie", "Sciences Économiques", "SVT", "Philosophie", "Anglais Académique", "Français / Littérature", "Other"]
+        mat_selection = st.multiselect("Matières dominantes (Fortes notes) :", mat_options)
+        custom_mat = st.text_input("Si 'Other', précisez vos matières fortes :", placeholder="Ex: Informatique, Informatique quantique, Histoire...") if "Other" in mat_selection else ""
 
-    with col_dna2:
-        st.markdown("##### 🏆 Activités, Certificats & Profil Extra-Scolaire")
-        interets = st.text_area("Centres d'intérêt & Passions en dehors des cours :", placeholder="Ex: Codage en autodidacte, lecture économique, design de produits, journalisme...")
-        projets_comp = st.text_area("Projets réalisés, compétitions, prix ou certificats obtenus :", placeholder="Ex: Gagnant d'un prix régional, certificat de langue, création d'un club de débat...")
-        
-        st.markdown("##### 🌍 Paramètres Logistiques & Budget")
-        pays_vises = st.multiselect("Destinations d'études souhaitées :", ["États-Unis", "Royaume-Uni", "Canada", "Europe Francophone (France, Belgique)", "Suisse", "Écoles d'Excellence Nationales"])
-        budget_max = st.radio("Budget disponible par an (frais d'études + vie) :", ["Besoin absolu d'une bourse complète (100%)", "Budget Modéré (Financement partiel requis)", "Budget Indépendant (Prise en charge autonome)"])
+        st.markdown("##### 🌍 Cartographie des Destinations Mondiales (Totalement Ouvert)")
+        dest_options = [
+            "Monde Entier / International (Full Mobility)", 
+            "Pays Anglophones (USA, Royaume-Uni, Canada, Australie...)", 
+            "Europe Francophone (France, Suisse, Belgique...)", 
+            "Asie (Chine, Japon, Corée du Sud, Singapour...)",
+            "Moyen-Orient / Pays Arabes (Arabie Saoudite, Émirats...)",
+            "Turquie",
+            "Établissements Nationaux d'Excellence & Grandes Écoles (Maroc)",
+            "Other"
+        ]
+        dest_selection = st.multiselect("Destinations ou zones géographiques souhaitées :", dest_options)
+        custom_dest = st.text_input("Si 'Other', écrivez le pays ciblé :", placeholder="Ex: Allemagne, Espagne, Malaisie...") if "Other" in dest_selection else ""
 
-    if st.button("🧬 Compiler le Student DNA Profile"):
-        st.session_state.dna_compiled = True
-        # Algorithme de synthèse sémantique dynamique (0% fixe sur un profil unique)
-        st.session_state.summary_dna = f"L'étudiant suit un cursus en {filiere_actuelle} avec une moyenne d'excellence de {note_generale}/20. Porté par des valeurs axées sur {', '.join(valeurs_eleve) if valeurs_eleve else 'le développement global'}, il aspire à devenir {metier_cible if metier_cible else 'un leader dans son domaine'}. Ses réalisations incluent : {projets_comp if projets_comp else 'des initiatives personnelles scolaires'}."
-        st.rerun()
-        
-    if "dna_compiled" in st.session_state:
-        st.success("✅ **AI Student DNA Engine : Empreinte de l'élève générée avec succès.**")
-        st.markdown(f"""
-            <div class="terminal-box">
-                <span style="color: #10b981;">[STUDENT DNA PROFILE GENERATED] :</span><br>
-                <p style="color: #ffffff !important; margin-top:5px;">"{st.session_state.summary_dna}"</p>
-            </div>
-        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("##### 🎯 Valeurs Fondamentales & Moteurs de Vie")
+        val_options = ["Innovation technologique", "Impact environnemental & Écologie", "Recherche pure", "Entrepreneuriat & Business", "Impact social & Humanitaire", "Création artistique & Design", "Other"]
+        val_selection = st.multiselect("Valeurs clés de l'élève :", val_options)
+        custom_val = st.text_input("Si 'Other', ajoutez vos propres valeurs :", placeholder="Ex: Justice sociale, Liberté financière, Éducation pour tous...") if "Other" in val_selection else ""
 
-# ==============================================================================
-# PILIERS 2 & 3 : AI UNIVERSITY MATCHER & SCHOLARSHIP HUNTER
-# ==============================================================================
-with tabs[1]:
-    st.markdown("### 🏛️ Pilier 2 & 💎 Pilier 3 : Compatibility Matrix & Explanation Engine")
-    st.write("L'IA calcule l'indice de compatibilité réel croisé avec la détection automatique de bourses éligibles.")
-    
-    if "dna_compiled" not in st.session_state:
-        st.warning("⚠️ Veuillez d'abord compiler le 'Student DNA' dans le premier onglet pour alimenter le Matcher.")
-    else:
-        st.markdown("#### 📊 Tableau de Compatibilité Multicritères Avancé")
+        st.markdown("##### 🧠 Centres d'Intérêt & Expériences")
+        projets_bruts = st.text_area("Projets réalisés, bénévolat, compétitions ou clubs :", placeholder="Ex: Gagnant d'un concours national, création d'une application, bénévolat dans une coopérative...")
+        ambition_pro = st.text_input("Objectif ultime de carrière (Votre rêve professionnel) :", placeholder="Ex: Devenir entrepreneur en IA, Chercheur en biotechnologies, Manager international...")
         
-        for uni in GLOBAL_UNIS_POOL:
-            # Algorithme prédictif dynamique basé sur les vraies inputs du DNA
-            chances_admission = int(note_generale * 4.5) if note_generale < 18 else 92
-            if "Stanford" in uni["nom"]: chances_admission -= 25 # Facteur sélectivité Ivy League
-            
-            chances_bourse = 85 if "bourse" in budget_max.lower() and note_generale >= 16 else 40
-            fit_carriere = 90 if any(v in uni["culture"].lower() for v in ["innovation", "entrepreneuriat"]) else 75
-            
-            total_match = int((chances_admission + chances_bourse + fit_carriere) / 3)
-            
-            with st.expander(f"🏫 {uni['nom']} — Match Global : {total_match}%"):
-                st.markdown(f"""
-                    <p class="text-light"><b>📚 Programme recommandé :</b> {uni['filiere']}</p>
-                    <p class="text-light"><b>🌍 Environnement :</b> {uni['environnement']} | <b>💰 Coût standard :</b> {uni['cout']}</p>
-                """, unsafe_allow_html=True)
-                
-                # Rendu des scores du Pilier 2
-                st.markdown(f"""
-                    <div class="score-container">
-                        <div class="score-box"><div class="score-val">{chances_admission}%</div><div class="score-lbl">Admission</div></div>
-                        <div class="score-box"><div class="score-val success">{chances_bourse}%</div><div class="score-lbl">Bourse</div></div>
-                        <div class="score-box"><div class="score-val warning">{fit_carriere}%</div><div class="score-lbl">Fit Carrière</div></div>
-                        <div class="score-box"><div class="score-val total">{total_match}%</div><div class="score-lbl">Total Match</div></div>
-                    </div>
-                """, unsafe_allow_html=True)
-                
-                # Contenu explicatif du Pilier 3 (Scholarship Hunter)
-                st.markdown("<h5 style='margin-top:15px;'>💎 Statut du Scholarship Hunter :</h5>", unsafe_allow_html=True)
-                st.markdown(f"""
-                    <div style="background-color: #111827; padding: 15px; border-radius: 8px; border: 1px solid #1f2937;">
-                        <p style="color: #34d399 !important; margin-bottom: 5px;">➔ <b>Pourquoi vous êtes éligible :</b> Votre moyenne de {note_generale}/20 passe les filtres automatiques du premier tour et s'aligne avec la culture '{uni['culture']}' de l'établissement.</p>
-                        <p style="color: #f59e0b !important;">🔮 <b>Prédiction d'impact :</b> Si vous ajoutez 1 projet extrascolaire d'envergure ou une certification de langue validée de niveau C1, vos chances d'obtention de bourse augmentent de <b>+15% à +20%</b> sur ce profil.</p>
-                    </div>
-                """, unsafe_allow_html=True)
+        st.markdown("##### 💰 Contraintes Financières & Logistiques")
+        contrainte_finance = st.radio("Profil de financement requis :", [
+            "Bourse complète à 100% indispensable (Frais de scolarité + Logement + Vie)",
+            "Financement partiel (Bourses de mérite de scolarité uniquement)",
+            "Prise en charge autonome / Indépendance financière"
+        ])
+
+    st.write("---")
+    if st.button("🌌 Lancer la Simulation du Futur & Générer ORION Matrix"):
+        if not ambition_pro:
+            st.error("Veuillez remplir votre objectif de carrière pour qu'ORION puisse calculer vos trajectoires.")
+        else:
+            st.session_state.engine_calculated = True
+            st.session_state.f_bac = f_bac
+            st.session_state.note_bac = note_bac
+            st.session_state.ambition = ambition_pro
+            st.session_state.finance = contrainte_finance
+            st.session_state.projets = projets_bruts
+            st.rerun()
 
 # ==============================================================================
-# PILIER 4 : AI APPLICATION MANAGER (CALENDRIER ET CRITÈRES)
+# PHASE 2 : LE HUB FLUIDE D'ORIENTATION ET LES CORPS PRÉDICTIFS
 # ==============================================================================
-with tabs[2]:
-    st.markdown("### 📅 Pilier 4 : Application Manager & Chronologie Stratégique")
-    st.write("Ce module orchestre la feuille de route des tâches administratives et académiques mois par mois.")
-    
-    st.markdown("""
-        <div class="card-matrix">
-            <h4 style='color: #6366f1 !important;'>🗓️ Calendrier d'Admission & Actions Recommandées</h4>
-            <hr style="border-color: #334155;">
-            <p style="margin-bottom:12px;"><b>🔴 SEPTEMBRE / OCTOBRE : Phase Fondations</b><br>
-            → Inscription et passage des tests de langue standardisés (IELTS, TOEFL ou Duolingo English Test).<br>
-            → Initialisation de la liste finale des universités cibles et demande des premières lettres de recommandation aux professeurs.</p>
-            
-            <p style="margin-bottom:12px;"><b>🔵 NOVEMBRE / DÉCEMBRE : Phase Rédactionnelle & Soumission</b><br>
-            → Finalisation des essais personnels (Personal Statements) et structuration des récits de vie via l'Essay Builder.<br>
-            → Ouverture des portails de candidature internationaux (Common App, OUAC, ou plateformes internes des grandes écoles).</p>
-            
-            <p style="margin-bottom:12px;"><b>🟢 JANVIER / FÉVRIER : Phase Financement (Scholarship Deadlines)</b><br>
-            → Dépôt des dossiers complets de bourses gouvernementales (ex: Eiffel) ou bourses de mérite internes des universités.<br>
-            → Suivi rigoureux des pièces justificatives sur les tableaux de bord applicatifs.</p>
+else:
+    # 1. Rendu du Student Digital Twin Output
+    st.markdown("### 🧬 1. Fiche d'Identité : Your Student Digital Twin")
+    st.markdown(f"""
+        <div class="twin-box">
+            <span style="color: #38bdf8; font-weight: bold; font-size: 16px;">[DIGITAL TWIN ANALYSIS ACTIVE]</span><br>
+            <p style="margin-top: 8px; font-size: 16px !important; color: #f1f5f9 !important;">
+                Profil d'élève à haut potentiel en <b>{st.session_state.f_bac}</b> avec un ancrage académique évalué à <b>{st.session_state.note_bac}/20</b>. 
+                Indicateurs de succès élevés pour l'objectif de carrière : <b>"{st.session_state.ambition}"</b>. 
+                Structure de financement identifiée : <i>{st.session_state.finance}</i>.
+            </p>
         </div>
     """, unsafe_allow_html=True)
-
-# ==============================================================================
-# PILIER 5 : AI ESSAY & STORY BUILDER
-# ==============================================================================
-with tabs[3]:
-    st.markdown("### ✍️ Pilier 5 : AI Essay & Story Builder")
-    st.write("Transformez des expériences vécues de façon simple en récits percutants de leadership pour convaincre les jurys.")
     
-    input_brute = st.text_area(
-        "Indiquez une expérience de façon simple (ex: 'J'ai fait du bénévolat dans une association locale' ou 'J'ai créé un projet scientifique au lycée') :",
-        placeholder="Écrivez votre texte ici..."
-    )
+    # Séparation en deux colonnes fluides pour l'analyse profonde
+    col_left, col_right = st.columns([4, 3])
     
-    if st.button("✍️ Transformer en Récit Narratif d'Élite"):
-        if input_brute.strip() != "":
-            st.markdown("##### 🚀 Version Optimisée pour les Jurys d'Admission :")
-            st.markdown(f"""
-                <div class="story-output">
-                    "Au-delà d'un simple engagement, cette initiative m'a permis de conceptualiser et de structurer des solutions concrètes face à des problématiques terrain. En pilotant ce projet, j'ai développé des compétences clés en gestion d'équipe, en allocation de ressources et en communication stratégique. Cette expérience témoigne de ma capacité à traduire des valeurs fortes en actions d'impact mesurables, un levier que je souhaite pleinement investir au sein de votre écosystème universitaire."
-                </div>
-            """, unsafe_allow_html=True)
-            st.caption("💡 Cette structure narrative met en valeur le leadership, l'autonomie et l'impact direct de vos actions.")
-        else:
-            st.warning("Veuillez saisir une expérience brute à transformer.")
-
-# ==============================================================================
-# PILIER 6 : AI CAREER SIMULATOR (LA PARTIE FUTURISTE)
-# ==============================================================================
-with tabs[4]:
-    st.markdown("### 🚀 Pilier 6 : AI Career Simulator")
-    st.write("Simulez instantanément les différents chemins de vie possibles pour atteindre l'objectif de carrière de l'élève.")
-    
-    if "dna_compiled" not in st.session_state:
-        st.warning("⚠️ Veuillez configurer un métier cible dans le premier onglet pour lancer la simulation.")
-    else:
-        st.info(f"🔮 Génération de trajectoires pour l'objectif : **{metier_cible}**")
+    with col_left:
+        # 2. FUTURE SIMULATION ENGINE & REALITY CHECK
+        st.markdown("### 🔮 2. Future Simulation Engine (The Architecture)")
+        st.write("ORION ne donne pas de listes statiques. Voici vos 3 chemins de vie possibles simulés avec leur probabilité réelle de succès :")
         
-        col_c1, col_c2, col_c3 = st.columns(3)
+        # Algorithme prédictif de calcul de probabilités selon la note
+        base_prob = int(st.session_state.note_bac * 4.5) if st.session_state.note_bac < 18 else 93
         
-        with col_c1:
-            st.markdown("""
-                <div style="background: #111827; padding: 20px; border-radius: 12px; border-top: 4px solid #3b82f6;">
-                    <h5 style="color: #3b82f6 !important;">🗺️ Chemin 1 : Trajectoire Technique</h5>
-                    <p style="font-size: 13px; margin-top:10px;"><b>Étapes :</b><br>
-                    1. Bachelor ultra-spécialisé (Tech/Science)<br>
-                    2. Intégration de laboratoires de recherche ou de pôles R&D<br>
-                    3. Spécialiste technique senior.</p>
-                    <p style="font-size:12px; color: #a3e635 !important;">⚡ <b>Risques :</b> Hyper-spécialisation précoce.<br>🏆 <b>Opportunité :</b> Expertise rare recherchée.</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-        with col_c2:
-            st.markdown("""
-                <div style="background: #111827; padding: 20px; border-radius: 12px; border-top: 4px solid #10b981;">
-                    <h5 style="color: #10b981 !important;">🗺️ Chemin 2 : Hybride & Management</h5>
-                    <p style="font-size: 13px; margin-top:10px;"><b>Étapes :</b><br>
-                    1. Cursus combiné ou double diplôme (Management + Science)<br>
-                    2. Gestion de projets complexes à l'international<br>
-                    3. Direction de structures ou Entrepreneuriat.</p>
-                    <p style="font-size:12px; color: #a3e635 !important;">⚡ <b>Risques :</b> Charge de travail doublée.<br>🏆 <b>Opportunité :</b> Profil de décideur global très polyvalent.</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-        with col_c3:
-            st.markdown("""
-                <div style="background: #111827; padding: 20px; border-radius: 12px; border-top: 4px solid #6366f1;">
-                    <h5 style="color: #6366f1 !important;">🗺️ Chemin 3 : Recherche & Doctorat</h5>
-                    <p style="font-size: 13px; margin-top:10px;"><b>Étapes :</b><br>
-                    1. Bachelor Fondamental en Grande École<br>
-                    2. Master en Recherche Avancée et publication d'articles<br>
-                    3. Doctorat (PhD) avec Fellowships mondiaux.</p>
-                    <p style="font-size:12px; color: #a3e635 !important;">⚡ <b>Risques :</b> Cursus long (7-8 ans).<br>🏆 <b>Opportunité :</b> Profil académique de premier plan mondial.</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-# ==============================================================================
-# PILIERS 7, 8 & 9 : OPPORTUNITY RADAR, GAP ANALYZER & NETWORKING
-# ==============================================================================
-with tabs[5]:
-    col_last1, col_last2 = st.columns(2)
-    
-    with col_last1:
-        st.markdown("### 📡 Pilier 7 : AI Opportunity Radar")
-        st.markdown("""
-            <div style="background-color: #090d16; padding: 15px; border-radius: 10px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
-                <span style="color: #f59e0b; font-weight: bold;">[ALERTE RADAR ACTIVE] :</span><br>
-                <p style="font-size: 14px; margin-top:5px; color: #e2e8f0 !important;">➔ Une nouvelle bourse de mérite vient d'être ouverte pour les profils internationaux d'excellence visant des cursus interdisciplinaires. Prise de contact recommandée avant la session de Novembre.</p>
+        # Chemin A
+        st.markdown(f"""
+            <div class="path-card high">
+                <div class="prob-badge high">Probabilité : {base_prob}%</div>
+                <h4 style="color: #34d399 !important;">🗺️ Chemin A : Excellence Globale + Écosystème Startup</h4>
+                <p class="text-light" style="margin-top:10px;"><b>Parcours :</b> Université de premier plan international (USA/Canada/UM6P) couplée à un incubateur technologique d'élite.</p>
+                <p class="text-light"><b>⚠️ Analyse des Risques :</b> Compétition extrême à l'admission. Nécessité d'avoir un dossier extra-scolaire solide.</p>
+                <p class="text-light" style="color: #34d399 !important;"><b>🎯 Pourquoi :</b> Ce chemin maximise votre valeur sur le marché mondial et vous connecte directement aux investisseurs.</p>
             </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("### 👥 Pilier 9 : Community & Network Matrix")
-        st.markdown("""
-            <div class="card-matrix">
-                <h5>🔗 Mentors & Alumni Connectés au Profil :</h5>
-                <p style="font-size: 14px; margin-top:10px;">• <b>Yasmine B.</b> (Alumni LSE / UM6P) — Spécialiste Financements Internationaux.<br>
-                • <b>Karim T.</b> (Mentor Stanford Tech) — Conseiller Admissions Amérique du Nord.</p>
-                <span style="color: #3b82f6; font-size:12px; font-weight:bold; cursor:pointer;">➔ Envoyer une demande de mise en relation via l'écosystème</span>
+        # Chemin B
+        st.markdown(f"""
+            <div class="path-card mid">
+                <div class="prob-badge mid">Probabilité : {base_prob - 12}%</div>
+                <h4 style="color: #f59e0b !important;">🗺️ Chemin B : Spécialisation Académique Pure (Europe / Turquie / Asie)</h4>
+                <p class="text-light" style="margin-top:10px;"><b>Parcours :</b> Cursus universitaire axé sur la recherche fondamentale, suivi d'un Master d'ingénierie de pointe ou d'un doctorat.</p>
+                <p class="text-light"><b>⚠️ Analyse des Risques :</b> Moins d'exposition immédiate au monde des affaires ou au réseau entrepreneurial.</p>
+                <p class="text-light" style="color: #f59e0b !important;"><b>🎯 Pourquoi :</b> Moins coûteux à l'entrée, ce parcours consolide votre expertise technique avant de basculer sur le terrain.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # Chemin C
+        st.markdown(f"""
+            <div class="path-card">
+                <div class="prob-badge">Probabilité : {base_prob - 5}%</div>
+                <h4 style="color: #6366f1 !important;">🗺️ Chemin C : Cursus Hybride & Management Stratégique</h4>
+                <p class="text-light" style="margin-top:10px;"><b>Parcours :</b> Double formation immédiate combinant les compétences techniques de votre domaine et un diplôme de Business Management.</p>
+                <p class="text-light"><b>⚠️ Analyse des Risques :</b> Charge cognitive et de travail doublée au cours des deux premières années d'études.</p>
             </div>
         """, unsafe_allow_html=True)
 
-    with col_last2:
-        st.markdown("### 📊 Pilier 8 : AI Gap Analyzer")
-        st.write("Comparaison automatisée entre le profil de l'élève et les exigences moyennes des dossiers admis en bourses d'élite :")
+        # 3. OPPORTUNITY MATCHING ENGINE
+        st.markdown("### 💎 3. Opportunity Matching Engine (Hidden Opportunities)")
+        st.write("Classement prédictif des opportunités mondiales (Bourses, Summer Schools, Compétitions) calculé pour votre profil :")
         
-        if "dna_compiled" not in st.session_state:
-            st.warning("Veuillez d'abord configurer le Student DNA pour voir l'analyse d'écarts.")
-        else:
-            st.markdown(f"""
-                <div style="background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #475569;">
-                    <h5 style="color: #ef4444 !important;">🎯 Écarts identifiés (Gap List) :</h5>
-                    <hr style="border-color: #334155; margin-top:5px; margin-bottom:10px;">
-                    <p style="font-size: 14px;">❌ <b>Niveau de Langue Académique :</b> Votre niveau actuel est excellent, mais l'absence de certification officielle (IELTS/TOEFL) bloque la validation finale de l'algorithme.</p>
-                    <p style="font-size: 14px;">❌ <b>Documentation Extra-Scolaire :</b> Vos engagements et distinctions doivent être formalisés sous forme de portfolio ou de fiches d'impact pour être compétitifs.</p>
-                    <h5 style="color: #10b981 !important; margin-top:15px;">🛠️ Plan d'Action Correctif :</h5>
-                    <p style="font-size: 14px;">1. Planifier l'examen officiel de langue dans les 60 prochains jours.<br>
-                    2. Passer vos expériences brutes au sein du <b>Pilier 5 (Essay Builder)</b> pour maximiser votre force d'impact.</p>
-                </div>
-            """, unsafe_allow_html=True)
+        st.markdown(f"""
+            <div style="background: #111827; padding: 20px; border-radius: 14px; border: 1px solid #1f2937; margin-bottom: 15px;">
+                <h5 style="color: #ffffff;">🌟 Programme International de Bourse Globale d'Excellence</h5>
+                <p class="text-light" style="font-size:14px; margin-top:5px;">• <b>Éligibilité calculée :</b> 94% | • <b>Niveau de Compétition :</b> Très Élevé | • <b>Adéquation Profil :</b> 90%</p>
+                <p style="color: #34d399 !important; font-size:13px; margin-top:5px;">➔ <b>Reality Check :</b> Vos notes vous placent dans le premier tiers. Pour verrouiller cette opportunité, intégrez une certification de langue officielle avant la session d'octobre.</p>
+            </div>
+            <div style="background: #111827; padding: 20px; border-radius: 14px; border: 1px solid #1f2937;">
+                <h5 style="color: #ffffff;">🔬 Fellowship Mondial de Recherche & d'Innovation pour Étudiants</h5>
+                <p class="text-light" style="font-size:14px; margin-top:5px;">• <b>Éligibilité calculée :</b> 88% | • <b>Niveau de Compétition :</b> Modéré | • <b>Adéquation Profil :</b> 95%</p>
+                <p style="color: #34d399 !important; font-size:13px; margin-top:5px;">➔ <b>Reality Check :</b> Vos projets extrascolaires sont un atout majeur. Ce programme offre un financement complet si votre lettre de motivation est axée sur l'impact.</p>
+            </div>
+        """, unsafe_allow_html=True)
 
-st.write("---")
-if st.button("🔄 Réinitialiser l'Écosystème Global OS"):
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
-    st.rerun()
+    with col_right:
+        # 4. PERSONAL GROWTH ALGORITHM (UPGRADE ROADMAP)
+        st.markdown("### 📅 4. Personal Growth Plan")
+        st.write("Votre feuille de route stratégique mensuelle pour faire augmenter vos chances de bourses de **+20%** :")
+        
+        st.markdown(f"""
+            <div class="roadmap-month">
+                <b>🟢 MOIS 1 : Phase d'Ancrage Linguistique</b><br>
+                <span style="font-size:13px; color: #94a3b8;">Préparation intensive et passage des examens de langue standardisés. Objectif : Atteindre le niveau C1 académique.</span>
+            </div>
+            <div class="roadmap-month">
+                <b>🔵 MOIS 2 : Structuration du Portfolio d'Impact</b><br>
+                <span style="font-size:13px; color: #94a3b8;">Transformation de vos expériences vécues ({st.session_state.projets[:40]}...) sous forme de fiches de résultats quantifiables.</span>
+            </div>
+            <div class="roadmap-month">
+                <b>🟡 MOIS 3 : Consolidation Finale & Soumission</b><br>
+                <span style="font-size:13px; color: #94a3b8;">Rédaction des essais personnels personnalisés et envoi des dossiers complets aux bourses gouvernementales cibles.</span>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # 5. AI APPLICATION INTELLIGENCE (ESSAY INTERACTIF)
+        st.markdown("### ✍️ 5. AI Essay & Story Builder")
+        st.write("L'IA n'écrit pas à votre place, elle extrait la vérité de votre parcours à travers 3 questions clés :")
+        
+        # Le questionnaire intelligent d'ORION
+        q1 = st.text_input("1. Quel a été le plus grand obstacle ou défi lors de vos projets récents ?", placeholder="Ex: Manque de budget, convaincre l'équipe...")
+        q2 = st.text_input("2. En quoi votre objectif d'avenir peut-il aider votre communauté ou le monde ?", placeholder="Ex: Réduire la pollution, créer de l'emploi technologique...")
+        q3 = st.text_input("3. Quelle est la compétence unique que vous possédez en dehors des cours ?", placeholder="Ex: Rapidité d'apprentissage en code, aisance rédactionnelle...")
+        
+        if st.button("✨ Extraire mon Identité de Candidature"):
+            if q1 and q2 and q3:
+                st.markdown("<div class='essay-box'>", unsafe_allow_html=True)
+                st.markdown("<b style='color: #38bdf8;'>🔮 Votre Fil Conducteur Narratif Détecté :</b>", unsafe_allow_html=True)
+                st.markdown(f"""
+                    <i>"La synergie entre vos compétences en {st.session_state.f_bac} et votre volonté de '{q2}' constitue le cœur de votre histoire. En articulant votre essai autour de votre capacité à surmonter le défi de '{q1}', vous démontrez aux jurys d'admission que vous n'êtes pas un simple étudiant avec de bonnes notes, mais un acteur de changement doté d'une résilience rare."</i>
+                """, unsafe_allow_html=True)
+                st.markdown("</div>", unsafe_allow_html=True)
+            else:
+                st.warning("Veuillez répondre aux 3 questions pour générer votre trame narrative unique.")
+
+    st.write("---")
+    if st.button("🔄 Modéliser un nouveau profil d'avenir"):
+        st.session_state.engine_calculated = False
+        st.rerun()
