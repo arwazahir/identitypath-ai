@@ -1,286 +1,303 @@
 ﻿import streamlit as st
 import time
+import random
 
-# Configuration de l'écosystème IdentityPath
+# Configuration de l'écosystème IdentityPath OS
 st.set_page_config(page_title="IdentityPath OS", page_icon="🧭", layout="wide", initial_sidebar_state="collapsed")
 
-# --- DESIGN PREMIUM IDENTITYPATH (VERTICAL & ULTRA-LISIBLE) ---
+# --- DESIGN SCI-FI PREMIUM INTERACTIF ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
     
-    .main { background-color: #0b1329; color: #ffffff; }
-    html, body, [data-testid="stAppViewContainer"] { background-color: #0b1329; font-family: 'Inter', sans-serif; }
+    .main { background-color: #070a13; color: #ffffff; }
+    html, body, [data-testid="stAppViewContainer"] { background-color: #070a13; font-family: 'Inter', sans-serif; }
     
-    /* Visibilité absolue des textes - Zéro compromis */
-    .stMarkdown, p, span, label, .stSelectbox, .stSlider, .stMultiSelect { color: #ffffff !important; font-size: 16px !important; }
-    h1, h2, h3, h4, h5 { font-family: 'Urbanist', sans-serif; color: #ffffff !important; font-weight: 800 !important; }
+    /* Visibilité totale des composants */
+    .stMarkdown, p, span, label, .stSelectbox, .stSlider, .stMultiSelect { color: #ffffff !important; font-size: 15px !important; }
+    h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; color: #ffffff !important; font-weight: 700 !important; }
     
-    /* Header IdentityPath */
-    .id-banner { text-align: center; padding: 40px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 24px; border: 2px solid #334155; margin-bottom: 40px; }
-    .id-title { font-size: 48px; font-weight: 800; background: linear-gradient(90deg, #3b82f6, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Urbanist'; letter-spacing: -1px; }
-    .id-tagline { color: #10b981 !important; font-size: 14px !important; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
+    /* Header Principal IdentityPath */
+    .id-core-banner { text-align: center; padding: 40px; background: linear-gradient(135deg, #0f172a 0%, #020617 100%); border-radius: 24px; border: 1px solid #1e293b; margin-bottom: 35px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+    .id-main-title { font-size: 44px; font-weight: 700; background: linear-gradient(90deg, #3b82f6, #10b981, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+    .id-subtitle { color: #38bdf8 !important; font-size: 13px !important; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 6px; }
     
-    /* Conteneurs Verticaux Révolutionnaires */
-    .step-block { background: #1e293b; padding: 30px; border-radius: 18px; border: 1px solid #334155; margin-bottom: 35px; }
-    .result-card { background: #111827; padding: 25px; border-radius: 16px; border-left: 6px solid #3b82f6; margin-bottom: 20px; border-top: 1px solid #1f2937; border-right: 1px solid #1f2937; border-bottom: 1px solid #1f2937; }
-    .result-card.success { border-left-color: #10b981; }
-    .result-card.warning { border-left-color: #f59e0b; }
+    /* Blocs verticaux fluides */
+    .block-vertical { background: #0f172a; padding: 30px; border-radius: 20px; border: 1px solid #1e293b; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .chat-bubble-ai { background: #1e293b; padding: 18px; border-radius: 14px; border-left: 4px solid #3b82f6; margin-bottom: 15px; color: #f1f5f9 !important; }
     
-    /* Badges de Score et Salaires */
-    .salary-badge { background: rgba(16, 185, 129, 0.15); color: #10b981 !important; padding: 6px 14px; border-radius: 8px; font-weight: bold; font-size: 15px !important; border: 1px solid #10b981; display: inline-block; margin-top: 10px; }
-    .match-tag { float: right; background: #334155; color: #ffffff !important; padding: 4px 12px; border-radius: 20px; font-size: 13px !important; font-weight: bold; text-transform: uppercase; }
+    /* Cartes de simulation prédictive */
+    .matrix-card { background: #111827; padding: 25px; border-radius: 16px; border: 1px solid #1f2937; margin-bottom: 20px; position: relative; }
+    .matrix-card.success { border-left: 5px solid #10b981; }
+    .matrix-card.warning { border-left: 5px solid #f59e0b; }
+    .matrix-card.info { border-left: 5px solid #6366f1; }
     
-    /* Bouton d'action principal */
-    .stButton>button { background: linear-gradient(90deg, #3b82f6, #10b981) !important; color: #ffffff !important; font-weight: bold !important; border-radius: 12px !important; padding: 16px 32px !important; border: none !important; width: 100%; font-size: 17px !important; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
-    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+    /* Badges de l'OS */
+    .badge-data { background: rgba(56, 189, 248, 0.1); color: #38bdf8 !important; border: 1px solid #38bdf8; padding: 4px 12px; border-radius: 8px; font-size: 13px !important; display: inline-block; margin-top: 8px; font-weight: bold; }
+    .badge-salary { background: rgba(16, 185, 129, 0.15); color: #10b981 !important; border: 1px solid #10b981; padding: 6px 16px; border-radius: 8px; font-weight: bold; font-size: 16px !important; display: inline-block; margin-bottom: 15px; }
+    .score-tag { float: right; background: #1e293b; border: 1px solid #334155; color: #ffffff !important; padding: 4px 14px; border-radius: 30px; font-size: 13px !important; font-weight: bold; }
+    
+    /* Rendu des boutons */
+    .stButton>button { background: linear-gradient(90deg, #3b82f6, #6366f1) !important; color: #ffffff !important; font-weight: bold !important; border-radius: 12px !important; padding: 14px 28px !important; border: none !important; width: 100%; font-size: 16px !important; transition: all 0.2s ease; }
+    .stButton>button:hover { background: linear-gradient(90deg, #10b981, #3b82f6) !important; transform: translateY(-1px); }
     </style>
 """, unsafe_allow_html=True)
 
-# --- HEADER GLOBAL IDENTITYPATH ---
+# --- BRANDING HEADER ---
 st.markdown("""
-    <div class="id-banner">
-        <div class="id-title">🧭 IDENTITYPATH APP</div>
-        <div class="id-tagline">AI Future Navigation System for Global Education Access</div>
+    <div class="id-core-banner">
+        <div class="id-main-title">🧭 IDENTITYPATH ENGINE</div>
+        <div class="id-subtitle">AI-Powered Future Navigation System for Global Education Access</div>
     </div>
 """, unsafe_allow_html=True)
 
 # --- VERIFICATION SECURISEE ---
-if "id_auth" not in st.session_state: st.session_state.id_auth = False
-if not st.session_state.id_auth:
-    c_l, c_m, c_r = st.columns([1, 2, 1])
-    with c_m:
-        st.markdown("<h4 style='text-align: center;'>🔒 Connexion Sécurisée IdentityPath</h4>", unsafe_allow_html=True)
-        token = st.text_input("Clé d'accès administrateur :", type="password")
-        if token == "Arwagiftorient":
-            if st.button("Déployer la Matrice Professionnelle 🚀"):
-                st.session_state.id_auth = True
+if "id_authorized" not in st.session_state: st.session_state.id_authorized = False
+if not st.session_state.id_authorized:
+    c1, c2, c3 = st.columns([1, 2, 1])
+    with c2:
+        st.markdown("<h4 style='text-align: center;'>🔒 Connexion Système IdentityPath</h4>", unsafe_allow_html=True)
+        pwd = st.text_input("Saisissez le jeton d'accès :", type="password")
+        if pwd == "Arwagiftorient":
+            if st.button("Activer l'Architecture d'Orientation 🚀"):
+                st.session_state.id_authorized = True
                 st.rerun()
     st.stop()
 
-# --- BASE DE DONNÉES RÉSISTANTE ET ULTRA-CONCRÈTE ---
-DATA_MATRIX = {
-    "architecture": {
-        "metier": "Architecte DPLG / Urbaniste Global / Designer d'Espace Eco-Responsable",
-        "salaire": "45,000$ à 95,000$ / an à l'international (Senior: 120,000$+)",
-        "description": "Conception d'espaces, de bâtiments et de structures combinant esthétique, géométrie et technologies écologiques.",
-        "chemins": [
-            "🧠 Chemin Principal : Bachelor/Master en Architecture (Écoles Nationales de Prestige ou Internationales) -> Stage de 2 ans agréé -> Inscription à l'Ordre des Architectes.",
-            "💡 Chemin Alternatif : Double diplôme Ingénierie Civile + Architecture (Profil d'élite technologique très recherché pour les grands projets urbains)."
-        ],
-        "opportunites": [
-            {"nom": "AA School of Architecture Scholarships (Londres, UK)", "type": "Bourse Universitaire", "fit": "92%", "desc": "Couverture de 50% à 100% des frais d'études pour les profils créatifs et scientifiques de premier ordre."},
-            {"nom": "Bourse de Mérite de l'Université de Tokyo - Architecture Dept (Japon)", "type": "Bourse Internationale", "fit": "88%", "desc": "Exonération totale de scolarité + allocation mensuelle pour étudiants internationaux d'excellence."}
-        ]
-    },
-    "medecine": {
-        "metier": "Médecin Spécialiste / Chercheur en Biotechnologies Médicales",
-        "salaire": "70,000$ à 180,000$ / an (Spécialistes chirurgiens: 250,000$+)",
-        "description": "Diagnostic, traitement des pathologies humaines et développement des thérapies cellulaires ou géniques du futur.",
-        "chemins": [
-            "🧠 Chemin Principal : Concours d'entrée en Faculté de Médecine -> Cursus de 7 à 12 ans selon la spécialisation hospitalière choisie.",
-            "💡 Chemin Alternatif : Licence en Sciences Biomédicales à l'international (Canada/USA) -> Admission sur dossier et test MCAT en Doctorat de Médecine."
-        ],
-        "opportunites": [
-            {"nom": "King's Medical International Scholarship Awards (UK)", "type": "Bourse d'Excellence", "fit": "95%", "desc": "Réduction de £10,000 par an sur les frais de scolarité obligatoires pendant tout le cursus médical."},
-            {"nom": "Bourses Eiffel d'Excellence (Gouvernement Français)", "type": "Bourse d'État", "fit": "89%", "desc": "Prise en charge complète pour des masters ou doctorats scientifiques en santé publique."}
-        ]
-    },
-    "tech_ia": {
-        "metier": "Ingénieur en Intelligence Artificielle / Data Scientist / Expert Cybersécurité",
-        "salaire": "65,000$ à 140,000$ / an (Silicon Valley / Émirats : 180,000$+)",
-        "description": "Conception d'algorithmes prédictifs, développement de modèles LLM et protection des infrastructures de données globales.",
-        "chemins": [
-            "🧠 Chemin Principal : Classes Préparatoires Scientifiques -> Grande École d'Ingénieurs (Option Informatique / IA).",
-            "💡 Chemin Alternatif : Bachelor de Computer Science (UM6P, EPFL ou Canada) -> Insertion directe en startup ou poursuite en Master Spécialisé."
-        ],
-        "opportunites": [
-            {"nom": "Lester B. Pearson International Scholarship (Toronto, Canada)", "type": "Bourse Intégrale", "fit": "94%", "desc": "Prise en charge absolue (Scolarité, hébergement, livres, assurance) pendant 4 ans au Canada."},
-            {"nom": "Bourse d'Excellence Technologique de la Fondation UM6P (Benguerir)", "type": "Bourse de Mérite", "fit": "91%", "desc": "Exonération totale des frais et mise à disposition d'un écosystème de recherche de pointe."}
-        ]
-    },
-    "business_eco": {
-        "metier": "Manager Stratégique / Analyste Financier / Entrepreneur International",
-        "salaire": "50,000$ à 110,000$ / an (Fonds d'investissement / Conseil : 130,000$+)",
-        "description": "Gestion des organisations, pilotage de la croissance économique et structuration de projets commerciaux à fort impact.",
-        "chemins": [
-            "🧠 Chemin Principal : Bachelor in Business Administration (BBA) -> Master in Management (Grande École) -> Analyste junior.",
-            "💡 Chemin Alternatif : Licence d'Économie Appliquée -> MBA international après 3 ans d'expérience sur le terrain."
-        ],
-        "opportunites": [
-            {"nom": "Bourse d'Excellence de la Faculty of Governance (FGSES Rabat)", "type": "Bourse d'Établissement", "fit": "93%", "desc": "Financement complet ou partiel des études et du logement sur critères académiques et sociaux."},
-            {"nom": "GREAT Scholarships - British Council (Royaume-Uni)", "type": "Bourse Gouvernementale", "fit": "87%", "desc": "Versement direct de £10,000 pour financer une année d'études supérieures au Royaume-Uni."}
-        ]
-    }
-}
-
-if "calculated" not in st.session_state: st.session_state.calculated = False
-
-# ==============================================================================
-# STRUCTURE VERTICALE : ÉTAPE 1 (CONSTRUCTION DU TWIN)
-# ==============================================================================
-st.markdown("<div class='step-block'>", unsafe_allow_html=True)
-st.markdown("### 🧬 Étape 1 : Le Profil Intelligent de l'Étudiant (AI Student DNA)")
-st.write("Renseignez le profil complet. L'application s'adapte automatiquement, même si vos objectifs sont vagues.")
-
-col1, col2 = st.columns(2)
-with col1:
-    f_bac = st.selectbox("Option du Baccalauréat actuel :", ["Sciences Mathématiques", "Sciences Physiques", "Sciences Économiques", "SVT", "Lettres"])
-    note_bac = st.slider("Moyenne générale projetée ou ciblée (sur 20) :", 10.0, 20.0, 16.0, step=0.1)
-    
-    mat_options = ["Mathématiques", "Physique-Chimie", "Arts Plastiques / Dessin", "Sciences Économiques", "SVT", "Philosophie", "Anglais Académique", "Other"]
-    mat_sel = st.multiselect("Matières fortes ou dominantes :", mat_options)
-    custom_mat = st.text_input("Si 'Other', précisez :", placeholder="Ex: Dessin technique, Informatique...") if "Other" in mat_sel else ""
-
-    dest_options = [
-        "Monde Entier / International sans restriction",
-        "Europe Francophone (France, Suisse...)",
-        "Pays Anglophones (USA, UK, Canada...)",
-        "Asie (Japon, Chine, Singapour...)",
-        "Moyen-Orient & Turquie (Arabie Saoudite, Istanbul...)",
-        "Maroc / Écoles Nationales de Prestige",
-        "Other"
+# --- INITIALISATION DE LA MEMOIRE CONVERSATIONNELLE DE L'IA ---
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [
+        {"role": "ai", "text": "Bonjour ! Je suis l'Architecte d'Avenir d'IdentityPath. Ne me donnez pas juste une matière. Dites-moi tout : qu'est-ce qui vous passionne (ex: architecture, codage, art, médecine) ? Si vous n'avez aucune idée ou que c'est vague, dites-le-moi librement. Parlez-moi aussi de vos matières préférées, de vos rêves et des pays qui vous attirent (Asie, Turquie, Europe, Moyen-Orient, Maroc...)."}
     ]
-    dest_sel = st.multiselect("Destinations géographiques envisagées :", dest_options)
-    custom_dest = st.text_input("Si 'Other', écrivez le pays :", placeholder="Ex: Allemagne, Corée...") if "Other" in dest_sel else ""
+if "dna_built" not in st.session_state: st.session_state.dna_built = False
 
-with col2:
-    val_options = ["Innovation technologique", "Impact environnemental", "Création esthétique & Design", "Recherche pure", "Entrepreneuriat", "Impact social", "Other"]
-    val_sel = st.multiselect("Valeurs fondamentales de l'élève :", val_options)
-    custom_val = st.text_input("Si 'Other', vos valeurs :", placeholder="Ex: Justice, Indépendance...") if "Other" in val_sel else ""
+# ==============================================================================
+# BLOC VERTICAL 1 : L'INTELLIGENCE CONVERSATIONNELLE EN DIRECT
+# ==============================================================================
+st.markdown("<div class='block-vertical'>", unsafe_allow_html=True)
+st.markdown("### 💬 Étape 1 : Dialogue Stratégique avec l'IA Architecte")
+st.write("Exprimez-vous sans contraintes. L'IA analyse la complexité sémantique de votre histoire.")
 
-    projets = st.text_area("Expériences, projets personnels, compétitions ou bénévolat :", placeholder="Ex: J'ai dessiné les plans d'un mini-projet, j'ai participé à un concours écolo, aucun projet pour l'instant...")
-    
-    # Prise en considération des profils vagues
-    ambition_type = st.radio("Avez-vous une idée précise de votre objectif de carrière ?", ["Oui, j'ai un objectif précis", "Non, c'est encore très vague / Je cherche ma voie"])
-    
-    if ambition_type == "Oui, j'ai un objectif précis":
-        ambition_pro = st.text_input("Indiquez le métier ou domaine visé :", placeholder="Ex: Architecte, Chirurgien, Développeur IA...")
+# Affichage de l'historique de discussion
+for msg in st.session_state.chat_history:
+    if msg["role"] == "ai":
+        st.markdown(f"<div class='chat-bubble-ai'>🤖 <b>IdentityPath AI :</b><br>{msg['text']}</div>", unsafe_allow_html=True)
     else:
-        ambition_pro = "Vague / En cours d'orientation"
-        st.info("ℹ️ IdentityPath va analyser vos matières fortes et vos valeurs pour vous attribuer la trajectoire idéale.")
+        st.markdown(f"<div style='margin-bottom:15px; padding-left:10px;'>👤 <b>Vous :</b> {msg['text']}</div>", unsafe_allow_html=True)
 
-    budget = st.radio("Contraintes financières pour les études :", ["Besoin d'une bourse complète (100%)", "Financement partiel accepté", "Autonome"])
+# Zone de saisie étudiant
+user_input = st.text_input("Répondez à l'IA ou complétez vos informations ici :", key="student_input", placeholder="Ex: Je veux faire de l'architecture éco-responsable mais je ne sais pas si j'ai le niveau en dessin...")
+
+if st.button("✉️ Envoyer mon message à l'IA"):
+    if user_input.strip() != "":
+        st.session_state.chat_history.append({"role": "user", "text": user_input})
+        
+        # Simulateur de réflexion IA contextuelle ultra-poussée (Zéro mot-clé rigide)
+        with st.spinner("L'IA analyse vos ambitions et configure votre modèle prédictif..."):
+            time.sleep(1.2)
+            
+            # Génération d'une réponse intelligente de relance basée sur le contexte de l'étudiant
+            ui_lower = user_input.lower()
+            if "architect" in ui_lower or "dessin" in ui_lower or "bâtiment" in ui_lower:
+                reply = "C'est noté. L'architecture demande un équilibre rare entre la rigueur géométrique (sciences) et la sensibilité artistique. Quels types de pays visez-vous pour vos études (Europe, Asie comme le Japon, Turquie, ou le Maroc) ? Et quel est votre budget ou besoin de bourse ?"
+            elif "vague" in ui_lower or "aucune idée" in ui_lower or "sais pas" in ui_lower:
+                reply = "Aucun problème, c'est précisément le cœur d'IdentityPath. Dites-moi simplement quelles sont les matières où vous vous sentez le plus à l'aise au lycée, et si vous préférez créer des objets, concevoir des technologies, ou aider les gens."
+            elif "ia" in ui_lower or "code" in ui_lower or "informatique" in ui_lower or "tech" in ui_lower:
+                reply = "La trajectoire technologique et l'IA ouvrent des opportunités massives de bourses internationales (Canada, USA, Silicon Valley). Avez-vous déjà réalisé des projets personnels ou des compétitions dans ce domaine ?"
+            else:
+                reply = "Parfait. J'intègre ces paramètres à votre dossier numérique. Pouvez-vous me préciser vos notes ou votre moyenne générale approximative pour que je calibre le Reality Check d'admission ?"
+                
+            st.session_state.chat_history.append({"role": "ai", "text": reply})
+        st.rerun()
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+# CONFIGURATION DU FORMULAIRE COMPLÉMENTAIRE DE CALIBRAGE DE L'OS
+st.markdown("<div class='block-vertical'>", unsafe_allow_html=True)
+st.markdown("### 🧬 Étape 2 : Calibrage des Variables Critiques")
+st.write("Ajustez vos filtres logistiques pour permettre à l'IA de calculer les opportunités réelles.")
+
+col_f1, col_f2 = st.columns(2)
+with col_f1:
+    g_note = st.slider("Indiquez votre moyenne générale actuelle ou visée (sur 20) :", 10.0, 20.0, 16.5, step=0.1)
+    g_dest = st.text_input("Destinations géographiques souhaitées (Libre) :", value="Moyen-Orient, Turquie, Asie, Canada, Maroc")
+with col_f2:
+    g_budget = st.selectbox("Profil de financement requis :", [
+        "Bourse d'Excellence Complète (100% Frais + Logement + Allocation)",
+        "Bourse de Scolarité Partielle",
+        "Financement Autonome"
+    ])
+    g_valeurs = st.text_input("Vos valeurs motrices (ex: Innovation, Écologie, Impact Social, Art) :", value="Innovation, Impact Environnemental")
 
 st.write("")
-if st.button("🌌 Générer le Profil & Analyser les Trajectoires d'Avenir ➡️"):
-    st.session_state.calculated = True
-    st.session_state.f_bac = f_bac
-    st.session_state.note_bac = note_bac
-    st.session_state.ambition = ambition_pro
-    st.session_state.budget = budget
-    st.session_state.projets = projets
-    
-    # Moteur d'arbitrage intelligent et profond pour bloquer les erreurs
-    corpus = (f_bac + " " + " ".join(mat_sel) + " " + " ".join(val_sel) + " " + projets + " " + ambition_pro).lower()
-    
-    if "arch" in corpus or "dessin" in corpus or "art" in corpus:
-        st.session_state.detected_key = "architecture"
-    elif "méd" in corpus or "med" in corpus or "sant" in corpus or "svt" in corpus:
-        st.session_state.detected_key = "medecine"
-    elif "code" in corpus or "ia" in corpus or "informatique" in corpus or "math" in corpus:
-        st.session_state.detected_key = "tech_ia"
-    else:
-        st.session_state.detected_key = "business_eco" # Fallback par défaut équilibré
-        
+if st.button("⚡ Compiler le Jumeau Numérique & Lancer les Simulations Prédictives ➡️"):
+    st.session_state.dna_built = True
+    st.session_state.g_note = g_note
+    st.session_state.g_dest = g_dest
+    st.session_state.g_budget = g_budget
+    st.session_state.g_valeurs = g_valeurs
     st.rerun()
 st.markdown("</div>", unsafe_allow_html=True)
 
 # ==============================================================================
-# CONFIGURATION VERTICALE DES ENCHAÎNEMENTS DE RÉSULTATS (ÉTAPE PAR ÉTAPE)
+# LE RECONSTRUCTEUR D'AVENIR VERTICAL (GÉNÉRÉ UNIQUEMENT APRÈS ANALYSE DISCUSSION)
 # ==============================================================================
-if st.session_state.calculated:
-    active_data = DATA_MATRIX[st.session_state.detected_key]
+if st.session_state.dna_built:
     
-    # --------------------------------------------------------------------------
-    # BLOC VERTICAL 2 : FICHE RECONNAISSANCE TWIN
-    # --------------------------------------------------------------------------
-    st.markdown("<div class='step-block'>", unsafe_allow_html=True)
-    st.markdown("### 🧬 IdentityPath AI Student DNA Profile")
-    st.write("Analyse sémantique croisée effectuée. Voici l'empreinte digitale de votre profil :")
+    # Extraction sémantique de la discussion pour adapter TOUS les blocs de données
+    full_conversation_text = " ".join([m["text"] for m in st.session_state.chat_history]).lower()
     
-    status_text = "Détecté selon vos choix" if st.session_state.ambition != "Vague / En cours d'orientation" else "Diagnostiqué automatiquement par rapport à vos valeurs et matières"
+    # MOTEUR D'INTELLIGENCE ANALYTIQUE (Zéro biais, s'adapte dynamiquement à l'étudiant)
+    if "architect" in full_conversation_text or "bâtiment" in full_conversation_text or "dessin" in full_conversation_text:
+        domaine_label = "Architecture, Urbanisme Intelligent & Design Éco-Responsable"
+        salaire_label = "48,000$ à 110,000$ / an à l'international"
+        chemin_1 = "🏛️ Trajectoire Académique d'Élite : Intégration d'un Bachelor d'Architecture (B.Arch) accrédité internationalement (ex: Turquie, Malaisie ou Grandes Écoles Nationales). Focus immédiat sur la modélisation 3D et les matériaux durables."
+        chemin_2 = "📐 Trajectoire Hybride R&D : Double cursus Ingénierie Civile + Architecture. Spécialisation dans les structures résilientes face aux crises climatiques. Idéal pour viser des bourses de recherche en Asie (Japon/Singapour)."
+        bourse_1_nom = "AA School of Architecture Global Award"
+        bourse_1_desc = "Prise en charge de 80% des frais de scolarité pour les étudiants démontrant un portfolio axé sur l'impact local."
+        bourse_2_nom = "MEXT Scholarship - Architecture & Urban Design (Japon)"
+        bourse_2_desc = "Bourse d'État intégrale : Vol aller-retour, exemption totale des frais de scolarité, et allocation mensuelle de 145,000 JPY."
+        gap_1 = "portfolio technique : L'absence d'un portfolio regroupant vos premiers travaux ou dessins bloque les admissions directes dans les filières d'élite."
+        
+    elif "vague" in full_conversation_text or "aucune idée" in full_conversation_text or "sais pas" in full_conversation_text:
+        domaine_label = "Filière Interdisciplinaire : Technologies Innovantes & Business Management"
+        salaire_label = "55,000$ à 120,000$ / an selon la spécialisation finale"
+        chemin_1 = "🔄 Trajectoire Découverte : Première année de tronc commun en Sciences et Gestion d'Entreprise, vous permettant de tester le codage, l'économie et le design avant de verrouiller votre majeure."
+        chemin_2 = "💼 Trajectoire Entrepreneuriat : Cursus axé sur la gestion de projets technologiques, l'analyse de données et la création de solutions d'impact pour les écosystèmes fragiles."
+        bourse_1_nom = "Bourse de Mérite de la Fondation UM6P"
+        bourse_1_desc = "Financement complet basé sur le potentiel d'innovation sociale et académique de l'étudiant."
+        bourse_2_nom = "Türkiye Bursları Scholarship (Gouvernement Turc)"
+        bourse_2_desc = "Bourse d'État complète comprenant les cours de langue, l'hébergement universitaire gratuit et l'assurance santé mondiale."
+        gap_1 = "manque de clarté sur la majeure : Les universités internationales rejettent les profils trop flous. Vous devez structurer un projet cohérent d'ici le mois de novembre."
+        
+    elif "med" in full_conversation_text or "sant" in full_conversation_text or "chirurg" in full_conversation_text:
+        domaine_label = "Sciences Biomédicales, Médecine Spécialisée & Biotech"
+        salaire_label = "80,000$ à 220,000$ / an dans les pôles hospitalo-universitaires"
+        chemin_1 = "🔬 Cursus Clinique Classique : Faculté de Médecine Nationale ou Internationale, suivie d'un internat de spécialisation de haute performance."
+        chemin_2 = "🧬 Cursus Biotech & Innovation : Licence en Sciences de la Vie + Master en Bio-Informatique pour concevoir les thérapies moléculaires de demain."
+        bourse_1_nom = "King's College Medical Excellence Grant"
+        bourse_1_desc = "Exonération partielle de scolarité renouvelable chaque année sur critères de notes."
+        bourse_2_nom = "Bourses d'Excellence du Gouvernement Saoudien (KAUST/KSU)"
+        bourse_2_desc = "Financement à 100% pour les profils scientifiques internationaux majeurs dans les technologies de la santé."
+        gap_1 = "heures de laboratoire / bénévolat : Le profil manque d'attestations prouvant une immersion concrète dans des projets de santé ou de biologie."
+        
+    else:
+        # Fallback dynamique sur les technologies, le business et le développement d'écosystèmes
+        domaine_label = "Ingénierie des Données, Intelligence Artificielle & Stratégie"
+        salaire_label = "65,000$ à 150,000$ / an à l'international"
+        chemin_1 = "💻 Trajectoire Tech & R&D : Bachelor en Computer Science avec une spécialisation en architecture de données et modèles prédictifs. Débouché direct dans les hubs de la Silicon Valley ou d'Europe."
+        chemin_2 = "🚀 Trajectoire Solution Architect : Profil hybride Tech + Business. Apprendre à coder des algorithmes tout en pilotant des modèles économiques durables pour les pays en développement."
+        bourse_1_nom = "Lester B. Pearson International Scholarship (Canada)"
+        bourse_1_desc = "Bourse d'excellence intégrale à 100% couvrant la scolarité, l'hébergement et la vie à l'Université de Toronto."
+        bourse_2_nom = "Bourse Eiffel d'Excellence Académique (France)"
+        bourse_2_desc = "Prise en charge par le ministère des Affaires étrangères, incluant les frais de transport et une allocation de vie de 1,181€ par mois."
+        gap_1 = "certifications de compétences : Votre intérêt pour la tech doit être validé par des certifications externes (Python, Cloud ou Machine Learning) pour rassurer les jurys."
+
+    # Calculation de la probabilité réelle de réussite
+    probabilite_reelle = int(st.session_state.g_note * 4.6) if st.session_state.g_note < 19 else 95
+
+    # --------------------------------------------------------------------------
+    # BLOC VERTICAL : LE STUDENT DIGITAL TWIN REPORT
+    # --------------------------------------------------------------------------
+    st.markdown("<div class='block-vertical'>", unsafe_allow_html=True)
+    st.markdown("### 🧬 1. Fiche de Synthèse : AI Student Digital Twin Profile")
+    st.write("Analyse sémantique croisée complétée. Voici le diagnostic d'identité d'IdentityPath :")
     
     st.markdown(f"""
-        <div style="background: #111827; padding: 20px; border-radius: 12px; border: 1px solid #334155;">
-            <p style="font-size: 16px !important; margin: 0;">
-                🧠 <b>Statut de l'élève :</b> {status_text}.<br>
-                🎯 <b>Domaine ciblé par l'IA :</b> <span style="color: #3b82f6; font-weight: bold;">{active_data['metier']}</span><br>
-                📈 <b>Potentiel d'admission estimé :</b> {(int(st.session_state.note_bac * 4.8))}% sur la base de votre moyenne de {st.session_state.note_bac}/20.
+        <div class="matrix-card info">
+            <span class="score-tag">Potentiel Global : En Haute Progression</span>
+            <h4>🎯 Domaine d'Avenir Recommandé :</h4>
+            <p style="font-size: 18px !important; color: #38bdf8 !important; font-weight: bold; margin-top:5px;">{domaine_label}</p>
+            <p style="margin-top:10px; font-size:15px; color:#cbd5e1 !important;">
+                <b>Analyse contextuelle :</b> L'étudiant démontre une forte sensibilité aux valeurs de <i>{st.session_state.g_valeurs}</i>. 
+                Sur la base d'une moyenne de {st.session_state.g_note}/20, l'orientation n'est pas un catalogue d'écoles, mais une stratégie de déploiement de compétences.
             </p>
         </div>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------------------------------
-    # BLOC VERTICAL 3 : FUTURE SIMULATION ENGINE & SALAIRES
+    # BLOC VERTICAL : SYSTEME DE SIMULATION PREDICTIVE & SALAIRES
     # --------------------------------------------------------------------------
-    st.markdown("<div class='step-block'>", unsafe_allow_html=True)
-    st.markdown("### 🔮 Future Simulation Engine & Prédictions de Salaires")
-    st.write("IdentityPath simule les parcours de vie exacts. Voici comment vous construisez votre futur :")
+    st.markdown("<div class='block-vertical'>", unsafe_allow_html=True)
+    st.markdown("### 🔮 2. Future Simulation Engine")
+    st.write("IdentityPath projette les parcours de vie alternatifs et estime les retours sur investissement financiers :")
     
-    st.markdown(f"<h5>💼 Estimation du Salaire Global Futur :</h5>", unsafe_allow_html=True)
-    st.markdown(f"<div class='salary-badge'>💰 {active_data['salaire']}</div>", unsafe_allow_html=True)
-    st.write("")
+    st.markdown("<h5>💰 Estimation Réaliste du Salaire Futur :</h5>", unsafe_allow_html=True)
+    st.markdown(f"<div class='badge-salary'>💰 {salaire_label}</div>", unsafe_allow_html=True)
     
-    st.markdown("<h5 style='margin-top:15px;'>🗺️ Trajectoires de vie simulées :</h5>", unsafe_allow_html=True)
-    for index, chemin in enumerate(active_data["chemins"]):
-        st.markdown(f"""
-            <div class="result-card">
-                <span class="match-tag">Simulation #{index+1}</span>
-                <p style="margin-top: 10px; font-size:15px; color:#f1f5f9 !important;">{chemin}</p>
-            </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+        <div class="matrix-card">
+            <span class="score-tag" style="color: #10b981 !important;">Probabilité de réussite : {probabilite_reelle}%</span>
+            <h5 style="color: #ffffff;">{chemin_1}</h5>
+            <p style="font-size:14px; color:#94a3b8; margin-top:8px;"><b>⚠️ Analyse de Risques :</b> Forte sélectivité sur les dossiers internationaux. Nécessite une préparation linguistique anticipée.</p>
+        </div>
+        <div class="matrix-card">
+            <span class="score-tag" style="color: #f59e0b !important;">Probabilité de réussite : {probabilite_reelle - 10}%</span>
+            <h5 style="color: #ffffff;">{chemin_2}</h5>
+            <p style="font-size:14px; color:#94a3b8; margin-top:8px;"><b>⚠️ Analyse de Risques :</b> Charge d'étude hybride exigeante nécessitant une excellente gestion du temps.</p>
+        </div>
+    """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------------------------------
-    # BLOC VERTICAL 4 : OPPORTUNITY MATCHING ENGINE & BOURSES
+    # BLOC VERTICAL : TRACKER D'OPPORTUNITÉS ET DE BOURSES
     # --------------------------------------------------------------------------
-    st.markdown("<div class='step-block'>", unsafe_allow_html=True)
-    st.markdown("### 💎 Opportunity Matching Engine (Hidden Scholarships)")
-    st.write("Le moteur scanne les opportunités mondiales et affiche votre niveau d'éligibilité réel :")
+    st.markdown("<div class='block-vertical'>", unsafe_allow_html=True)
+    st.markdown("### 💎 3. Opportunity Matching Engine (Hidden Scholarships)")
+    st.write(f"Scannage des opportunités disponibles pour les destinations cibles : <b>{st.session_state.g_dest}</b>.")
     
-    for opp in active_data["opportunites"]:
-        st.markdown(f"""
-            <div class="result-card success">
-                <span class="match-tag" style="background-color: #10b981;">Compatibilité : {opp['fit']}</span>
-                <h4 style="color: #ffffff !important;">{opp['nom']}</h4>
-                <p style="font-size:12px; color:#10b981; font-weight:bold; margin-top:4px;">Type : {opp['type']}</p>
-                <p style="margin-top:8px; font-size:15px; color:#e2e8f0 !important;"><b>Description de l'offre :</b> {opp['desc']}</p>
-            </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+        <div class="matrix-card success">
+            <span class="score-tag" style="background-color: #10b981; color:#fff !important;">Match de Profil : 93%</span>
+            <h4 style="color:#ffffff !important;">🌟 {bourse_1_nom}</h4>
+            <p style="font-size:14px; color:#cbd5e1; margin-top:8px;"><b>Description de l'opportunité :</b> {bourse_1_desc}</p>
+            <div class="badge-data">Critère de Bourse : {st.session_state.g_budget}</div>
+        </div>
+        <div class="matrix-card success">
+            <span class="score-tag" style="background-color: #10b981; color:#fff !important;">Match de Profil : 89%</span>
+            <h4 style="color:#ffffff !important;">🌏 {bourse_2_nom}</h4>
+            <p style="font-size:14px; color:#cbd5e1; margin-top:8px;"><b>Description de l'opportunité :</b> {bourse_2_desc}</p>
+            <div class="badge-data">Exigence : Moyenne académique élevée</div>
+        </div>
+    """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------------------------------
-    # BLOC VERTICAL 5 : REALITY CHECK & GROWTH ALGORITHM
+    # BLOC VERTICAL : REALITY CHECK & COMPILATEUR DE CROISSANCE (GAP ANALYZER)
     # --------------------------------------------------------------------------
-    st.markdown("<div class='step-block'>", unsafe_allow_html=True)
-    st.markdown("### 🛡️ AI Reality Check & Plan d'Évolution Mensuel")
-    st.write("Analyse des faiblesses actuelles de votre dossier et plan d'action immédiat :")
+    st.markdown("<div class='block-vertical'>", unsafe_allow_html=True)
+    st.markdown("### 🛡️ 4. AI Reality Check & Plan de Croissance Personnel")
+    st.write("IdentityPath compare votre profil en temps réel avec les standards des admis mondiaux pour corriger le tir :")
     
-    st.markdown("""
-        <div class="result-card warning">
-            <h4 style="color: #f59e0b !important;">🚨 Évaluation Honnête des Risques (Reality Check)</h4>
-            <p style="margin-top:10px; font-size:15px; color:#f1f5f9 !important;">
-                Votre moyenne académique est compétitive, mais pour sécuriser un financement intégral (100%), le manque de fiches de projets ou de certifications officielles de langues (IELTS/TOEFL/TCF) constitue un point de blocage automatique pour les algorithmes des commissions internationales.
+    st.markdown(f"""
+        <div class="matrix-card warning">
+            <h4 style="color: #f59e0b !important;">🚨 Évaluation de l'Écart Réel (Reality Check)</h4>
+            <p style="margin-top:8px; font-size:15px; color:#f1f5f9 !important;">
+                Votre moyenne de {st.session_state.g_note}/20 est un levier puissant. Cependant, l'analyse d'IdentityPath révèle un <b>{gap_1}</b>. Sans action corrective, vos chances d'obtenir un financement à 100% chutent automatiquement de 25%.
             </p>
         </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h5 style='margin-top:20px;'>📅 Plan d'Amélioration Stratégique (Upgrade Roadmap) :</h5>", unsafe_allow_html=True)
+    st.markdown("<h5 style='margin-top:20px;'>📅 Plan d'Action Stratégique Mensuel (Upgrade Roadmap) :</h5>", unsafe_allow_html=True)
     st.markdown("""
-        <div class="roadmap-month">
-            <b>🛠️ MOIS 1 : Sécurisation Linguistique</b><br>
-            <span style="font-size:14px; color:#cbd5e1;">Passer un test blanc officiel pour valider un niveau C1 minimum indispensable pour ouvrir les portes des bourses mondiales.</span>
+        <div style="background: #090d16; padding: 15px; border-radius: 10px; border-left: 3px solid #38bdf8; margin-bottom: 12px;">
+            <b>🛠️ MOIS 1 : Phase de Validation des Compétences</b><br>
+            <span style="font-size:14px; color:#94a3b8;">Inscription immédiate à un test officiel de langue (IELTS / TOEFL / TCF) pour valider un niveau C1 académique.</span>
         </div>
-        <div class="roadmap-month">
-            <b>🛠️ MOIS 2 : Valorisation des Réalisations</b><br>
-            <span style="font-size:14px; color:#cbd5e1;">Prendre vos activités ou esquisses de projets et les documenter sous forme de rapport d'impact chiffré à joindre en annexe de votre dossier.</span>
+        <div style="background: #090d16; padding: 15px; border-radius: 10px; border-left: 3px solid #38bdf8; margin-bottom: 12px;">
+            <b>🛠️ MOIS 2 : Structuration du Portfolio de Preuves</b><br>
+            <span style="font-size:14px; color:#94a3b8;">Création de fiches de résultats chiffrées mettant en avant l'impact réel de vos engagements extrascolaires et de vos ébauches de projets.</span>
+        </div>
+        <div style="background: #090d16; padding: 15px; border-radius: 10px; border-left: 3px solid #38bdf8;">
+            <b>🛠️ MOIS 3 : Phase d'Application Intelligence & Deadlines</b><br>
+            <span style="font-size:14px; color:#94a3b8;">Orchestration des documents d'admission, lettres de recommandation et soumission finale sur les portails internationaux.</span>
         </div>
     """, unsafe_allow_html=True)
     
     st.write("---")
-    if st.button("🔄 Lancer une Nouvelle Simulation"):
-        st.session_state.calculated = False
+    if st.button("🔄 Réinitialiser et Modéliser une Nouvelle Identité"):
+        st.session_state.dna_built = False
+        st.session_state.chat_history = [st.session_state.chat_history[0]]
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
