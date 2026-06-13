@@ -32,7 +32,7 @@ st.markdown("""
     .stButton>button { background: linear-gradient(90deg, #3b82f6, #10b981) !important; color: white !important; font-weight: bold !important; border: none !important; border-radius: 12px !important; padding: 12px 30px !important; transition: all 0.3s ease; }
     .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
     </style>
-""", unsafe_allow_stdio=True)
+""", unsafe_allow_html=True)
 
 # --- HEADER DE MARQUE ---
 st.markdown("""
@@ -124,7 +124,6 @@ if "current_step" not in st.session_state:
     st.session_state.current_step = 1
 
 # Barre de progression dynamique et professionnelle
-steps = ["1. Informations Académiques", "2. Passions & Exploration", "3. Filtrage & Recommandations"]
 st.progress(st.session_state.current_step / 3)
 
 # --- ÉTAPE 1 : ACADÉMIQUE ---
@@ -151,9 +150,8 @@ if st.session_state.current_step == 1:
 # --- ÉTAPE 2 : EXPLORATION LIBRE (VOCALE OU TEXTE) ---
 elif st.session_state.current_step == 2:
     st.markdown("### 🎙️ Étape 2 : Vos Passions & Domaines de Rêve")
-    st.write("Ici, pas de case à cocher restrictive. Parlez ou écrivez comme vous le feriez avec un mentor privé. Racontez-nous ce que vous aimez faire (créer, calculer, diriger, soigner, débattre...) et ce qui vous inspire.")
+    st.write("Ici, pas de case à cocher restrictive. Parlez ou écrivez comme vous le feriez avec un mentor privé.")
     
-    # Intégration du composant d'écoute vocale HTML5 avancé
     st.components.v1.html("""
         <div style="background-color: #1e293b; border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed #3b82f6;">
             <button id="record-btn" style="background: linear-gradient(90deg, #ef4444, #f43f5e); color: white; font-family: sans-serif; font-size: 16px; font-weight: bold; border: none; padding: 12px 28px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);">
@@ -166,26 +164,19 @@ elif st.session_state.current_step == 2:
             const status = document.getElementById('rec-status');
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if(!SpeechRecognition) {
-                status.innerText = "La commande vocale n'est pas supportée sur ce navigateur. Utilisez la zone de texte ci-dessous !";
+                status.innerText = "Utilisez la zone de texte ci-dessous !";
                 btn.style.display = 'none';
             } else {
                 const rec = new SpeechRecognition();
                 rec.lang = 'fr-FR';
                 btn.addEventListener('click', () => {
                     rec.start();
-                    btn.innerText = "⏳ Écoute en cours... Parlez librement.";
-                    btn.style.background = "#334155";
+                    btn.innerText = "⏳ Écoute en cours...";
                 });
                 rec.onresult = (e) => {
                     const text = e.results[0][0].transcript;
                     window.parent.postMessage({type: 'streamlit:set_input', value: text}, '*');
                     btn.innerText = "🔴 CLIQUEZ POUR PARLER (Micro)";
-                    btn.style.background = "linear-gradient(90deg, #ef4444, #f43f5e)";
-                };
-                rec.onerror = () => {
-                    btn.innerText = "🔴 Recommencer";
-                    btn.style.background = "linear-gradient(90deg, #ef4444, #f43f5e)";
-                    status.innerText = "Erreur de capture. Veuillez réactiver le micro.";
                 };
             }
         </script>
@@ -201,7 +192,7 @@ elif st.session_state.current_step == 2:
     with col_b2:
         if st.button("Analyser mon profil & Filtrer les universités mondiales 🧭"):
             if user_expression.strip() == "":
-                st.error("Veuillez vous exprimer via le micro ou la zone de texte avant de lancer le filtrage.")
+                st.error("Veuillez vous exprimer avant de lancer le filtrage.")
             else:
                 st.session_state.user_expression = user_expression
                 st.session_state.current_step = 3
@@ -210,24 +201,16 @@ elif st.session_state.current_step == 2:
 # --- ÉTAPE 3 : MOTEUR DE FILTRAGE INTELLIGENT & RÉSULTATS ---
 elif st.session_state.current_step == 3:
     st.markdown("### 🧭 Vos Itinéraires d'Avenir Personnalisés")
-    st.write("Notre moteur d'intelligence a analysé vos propos et a filtré l'ensemble des domaines mondiaux pour retenir la meilleure adéquation.")
     
     text_clean = st.session_state.user_expression.lower()
     matches_found = 0
     
-    # Balayage de la base de données universelle
     for key, data in UNIVERSAL_DATABASE.items():
-        # Vérification si l'un des mots-clés est présent dans le texte de l'élève
         if any(keyword in text_clean for keyword in data["keywords"]):
             matches_found += 1
-            
-            # Affichage de la catégorie détectée
             st.markdown(f"#### ✨ Secteur Identifié : {data['filiere']}")
             st.info(data["desc"])
             
-            st.write("**🏛️ Établissements & Universités Recommandés :**")
-            
-            # Génération des cartes d'universités dynamiques
             cols_uni = st.columns(2)
             for idx, inst in enumerate(data["institutions"]):
                 target_col = cols_uni[idx % 2]
@@ -241,33 +224,25 @@ elif st.session_state.current_step == 3:
                     """, unsafe_allow_html=True)
             st.write("---")
             
-    # Si aucun mot-clé ultra-spécifique n'a été intercepté, le robot propose une analyse transversale d'excellence
     if matches_found == 0:
-        st.warning("🧐 Votre profil est d'une grande richesse transversale. Aucun pôle unique n'a été restrictif. Voici notre recommandation pour les profils polyvalents :")
+        st.warning("🧐 Votre profil est d'une grande richesse transversale. Voici notre recommandation :")
         st.markdown("""
             <div class="uni-card" style="border-left-color: #3b82f6;">
                 <div class="uni-title">Cursus Pluridisciplinaires & Bourses Mondiales</div>
-                <div class="uni-det">Vu votre flexibilité, les filières comme les <b>Classes Préparatoires Commerciales (ECG)</b>, les Bachelors en <b>Sciences Politiques</b> ou les filières <b>Arts & Technologies</b> à l'international sont optimales pour vous laisser le temps de choisir.</div>
+                <div class="uni-det">Vu votre flexibilité, les filières comme les Classes Préparatoires Commerciales, les Bachelors en Sciences Politiques ou Arts & Technologies à l'international sont optimales.</div>
                 <div class="badge">Recommandation Spéciale IdentityPath</div>
             </div>
         """, unsafe_allow_html=True)
         
-    # Section Plan d'Action Dossier d'Excellence
     st.markdown("### 📈 Votre Feuille de Route Stratégique")
-    st.write(f"En tant qu'étudiant visant l'excellence depuis votre filière (**{st.session_state.filiere_bac}**), avec une projection de moyenne de **{st.session_state.note_estimee}/20** :")
-    
     col_f1, col_f2, col_f3 = st.columns(3)
     with col_f1:
         st.metric(label="Statut Dossier", value="Éligible Bourses" if st.session_state.note_estimee >= 16 else "Dossier Standard")
-        st.caption("Basé sur vos prévisions de notes et vos ambitions.")
     with col_f2:
         st.metric(label="Prochaine Étape", value="IELTS / SAT" if "Anglophones" in st.session_state.ambition else "Concours Nationaux")
-        st.caption("Exigence requise pour votre cible géographique.")
     with col_f3:
         st.metric(label="Optimisation Profil", value="Extra-Scolaire", delta="Prioritaire")
-        st.caption("Valorisez vos projets d'innovation et vos engagements.")
 
-    if st.button("🔄 Refaire un nouveau diagnostic d'orientation"):
+    if st.button("🔄 Refaire un nouveau diagnostic"):
         st.session_state.current_step = 1
-        st.session_state.authenticated = True
         st.rerun()
