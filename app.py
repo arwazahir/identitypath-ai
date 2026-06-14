@@ -1,77 +1,733 @@
-import streamlit as st
+﻿"""
+IdentityPath AI — Master Universities Dataset
+=================================================
+Regions Covered: Morocco, Middle East, and Europe
 
-# --- CONFIGURATION PREMIUM ---
-st.set_page_config(page_title="IdentityPath AI | Global Master Engine", page_icon="🧭", layout="wide")
+This dataset serves as the core knowledge base for the AI matching engine.
+Tuition figures, ranking tiers, and fields are structured to optimize multi-attribute 
+filtering and embedding-based contextual retrieval.
+"""
 
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap');
-    body, [data-testid="stAppViewContainer"] { background-color: #060a12; color: white; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .stButton>button { background: linear-gradient(90deg, #2563eb, #059669); color: white; border-radius: 12px; width: 100%; font-weight: 700; padding: 15px; border: none; }
-    .card { background: #0b111e; padding: 20px; border-radius: 16px; border: 1px solid #1e293b; margin-bottom: 20px; }
-    h1, h2, h3 { color: #ffffff !important; }
-    </style>
-""", unsafe_allow_html=True)
+# ==============================================================================
+# 0. STUDENT PROFILE SYSTEM & TRACKING METRICS
+# ==============================================================================
 
-# --- BASE DE DONNÉES GLOBALE EXHAUSTIVE ---
-DB = {
-    "Santé & Vivant": {
-        "filières": ["Médecine", "Biotechnologies", "Neurosciences", "Éco-toxicologie", "Agronomie Durable"],
-        "unis": ["Wageningen University (Pays-Bas)", "Karolinska Institutet (Suède)", "McGill (Canada)", "FMP (Maroc)", "KAUST (Arabie)"],
-        "bourses": ["Bourse Eiffel (France)", "DAAD (Allemagne)", "MasterCard Foundation", "Bourses MEXT (Japon)"]
-    },
-    "Tech, IA & Ingénierie": {
-        "filières": ["IA & Data Science", "Génie Civil & Environnement", "Énergies Renouvelables", "Informatique Quantique"],
-        "unis": ["MIT (USA)", "EPFL (Suisse)", "NUS (Singapour)", "1337 (Maroc)", "TU Delft (Pays-Bas)", "Tsinghua (Chine)"],
-        "bourses": ["SINGA (Singapour)", "KAUST Fellowships", "Bourse d'Excellence EPFL", "Türkiye Bursları"]
-    },
-    "Business & Stratégie": {
-        "filières": ["Management de l'Innovation", "Finance Durable", "Supply Chain", "Entrepreneuriat"],
-        "unis": ["HEC Paris (France)", "LSE (UK)", "Wharton (USA)", "ABS UM6P (Maroc)", "Rotterdam School of Mgmt"],
-        "bourses": ["Bourse Eiffel", "Fondation Al Ghurair", "Bourse Érasmus+", "Bourses Lester B. Pearson"]
-    },
-    "Design, Arts & Archi": {
-        "filières": ["Architecture Durable", "UI/UX Design", "Design Industriel", "Urbanisme"],
-        "unis": ["Politecnico di Milano (Italie)", "UAL (UK)", "Parsons (USA)", "ENA (Maroc)", "SAP+D UM6P"],
-        "bourses": ["Bourse DSU (Italie)", "Bourse d'Excellence SAP+D", "British Council GREAT", "Türkiye Bursları"]
+STUDENTS_PROFILES = [
+    {
+        "student_id": "std_01_arwa",
+        "name": "Arwa",
+        "location": {
+            "city": "Casablanca",
+            "country": "Morocco"
+        },
+        "academic_metrics": {
+            "current_year": "Second Year of High School (1ère BAC)",
+            "average_grade_range": [17.0, 18.0],
+            "standardized_testing": {
+                "sat": "In Preparation Cycle",
+                "language_proficiency": "In Preparation Cycle"
+            }
+        },
+        "academic_interests": {
+            "core_intersection": ["New Technologies", "Entrepreneurship", "Business Innovation"],
+            "target_domains": ["engineering_tech", "business_finance"],
+            "preferred_instruction_languages": ["English", "French"]
+        },
+        "financial_profile": {
+            "requires_funding": True,
+            "scholarship_preference": "Full-Ride International Scholarships",
+            "fee_waiver_status": {
+                "available": False,
+                "notes": "Institutional fee waivers not supported by current high school framework"
+            }
+        },
+        "skills_and_portfolio": {
+            "technical_creative": ["Self-Taught Graphic Design", "Digital Content Creation"],
+            "linguistic_sophistication": "Hyper-Soutenu (Advanced Literary Arabic and French Academic Prose)"
+        },
+        "distinctions_and_activities": [
+            {
+                "type": "Competition",
+                "title": "National First Place Winner in Environmental Journalism and Innovation (2025)",
+                "focus": "Ecological Filtration Systems and Wetland Preservation Architecture"
+            },
+            {
+                "type": "Research & Concept Development",
+                "title": "Ecological Filtration Matrix for the Daya of Dar Bouazza",
+                "components": ["Activated Carbon", "Natural Adsorbent Materials"]
+            },
+            {
+                "type": "Professional Internships",
+                "records": [
+                    "Business Management & Corporate Strategy Dynamics",
+                    "Industrial Printing Systems & Design Processing Operations",
+                    "Biochemical & Analytical Laboratory Environments"
+                ]
+            },
+            {
+                "type": "Community Leadership & Volunteerism",
+                "description": "Strategic Marketing, Branding, and Comprehensive Graphic Design Support for an Active Local Women's Cooperative (20+ Artisans)"
+            },
+            {
+                "type": "International Engagement",
+                "title": "Summer Camp Program Candidate (Germany, June 2026)",
+                "focus": "Innovation, Structural Engineering, and Ecosystem Entrepreneurship"
+            }
+        ],
+        "key_recommenders": ["Science Instructor", "Physics Instructor", "French Literature Instructor"]
     }
-}
+]
 
-# --- LOGIQUE DE L'APP ---
-st.title("🧭 IdentityPath AI - Global Engine")
+# ==============================================================================
+# 1. MOROCCO & MIDDLE EAST REGION
+# ==============================================================================
 
-if "step" not in st.session_state: st.session_state.step = 1
+UNIVERSITIES_MOROCCO_MIDDLEEAST = [
+    # ---------------- PUBLIC UNIVERSITIES (MOROCCO) ----------------
+    {
+        "id": "ma_um5_rabat",
+        "name": "Université Mohammed V de Rabat",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Medicine (MD)", "Pharmacy", "Dentistry", "Computer Science", "Law (LLB/JD)", "Economics", "Mechanical Engineering", "Physics"],
+        "domains": ["medicine_health", "engineering_tech", "law_politics", "business_finance", "science_research"],
+        "scholarships_available": True,
+        "website": "https://www.um5.ac.ma",
+        "notes": "One of Morocco's oldest flagship comprehensive universities with highly competitive medical and engineering faculties.",
+    },
+    {
+        "id": "ma_uh2c_casa",
+        "name": "Université Hassan II de Casablanca",
+        "country": "Morocco", "region": "morocco", "city": "Casablanca",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Medicine (MD)", "Dentistry", "Software Engineering", "Business Administration", "Economics", "Chemistry", "Biology"],
+        "domains": ["medicine_health", "engineering_tech", "business_finance", "science_research"],
+        "scholarships_available": True,
+        "website": "https://www.univh2c.ma",
+        "notes": "Major public economic and medical hub, dynamic research focus in the financial capital.",
+    },
+    {
+        "id": "ma_uca_marrakech",
+        "name": "Université Cadi Ayyad",
+        "country": "Morocco", "region": "morocco", "city": "Marrakech",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Medicine (MD)", "Physics", "Chemistry", "Mathematics", "Computer Science", "Tourism Management"],
+        "domains": ["medicine_health", "science_research", "engineering_tech", "business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.uca.ma",
+        "notes": "Consistently ranked among the top public research universities in North Africa for physical sciences.",
+    },
+    {
+        "id": "ma_usmba_fes",
+        "name": "Université Sidi Mohamed Ben Abdellah",
+        "country": "Morocco", "region": "morocco", "city": "Fès",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Medicine (MD)", "Pharmacy", "Islamic Studies", "History", "Computer Science", "Chemistry"],
+        "domains": ["medicine_health", "social_humanities", "engineering_tech", "science_research"],
+        "scholarships_available": True,
+        "website": "https://www.usmba.ac.ma",
+        "notes": "Prestigious public institution with a long academic heritage in humanities and health sciences.",
+    },
+    {
+        "id": "ma_uit_kenitra",
+        "name": "Université Ibn Tofail",
+        "country": "Morocco", "region": "morocco", "city": "Kénitra",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Physics", "Chemistry", "Environmental Science", "Materials Science", "Computer Science"],
+        "domains": ["science_research", "engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.uit.ac.ma",
+        "notes": "Highly progressive public science and tech focus, fast-growing research output in green energy.",
+    },
+    {
+        "id": "ma_uiz_agadir",
+        "name": "Université Ibn Zohr",
+        "country": "Morocco", "region": "morocco", "city": "Agadir",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Agricultural Sciences", "Environmental Science", "Economics", "Geography", "Computer Science"],
+        "domains": ["agriculture_food", "science_research", "business_finance", "social_humanities"],
+        "scholarships_available": True,
+        "website": "https://www.uiz.ac.ma",
+        "notes": "Massive regional footprint covering southern Morocco, strong expertise in arid zone agriculture and environmental innovations.",
+    },
+    {
+        "id": "ma_ump_oujda",
+        "name": "Université Mohammed Premier",
+        "country": "Morocco", "region": "morocco", "city": "Oujda",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Computer Science", "Electrical Engineering", "Mathematics", "Law (LLB/JD)"],
+        "domains": ["engineering_tech", "science_research", "law_politics"],
+        "scholarships_available": True,
+        "website": "https://www.ump.ma",
+        "notes": "Leading public campus in the Oriental region, distinguished performance in competitive programming and technical disciplines.",
+    },
+    {
+        "id": "ma_umi_meknes",
+        "name": "Université Moulay Ismaïl",
+        "country": "Morocco", "region": "morocco", "city": "Meknès",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Mechanical Engineering", "Materials Science", "History", "Economics", "Biology"],
+        "domains": ["engineering_tech", "science_research", "social_humanities", "business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.umi.ac.ma",
+        "notes": "Broad academic spectrum with notable integration with the regional industrial and mechanical sectors.",
+    },
+    {
+        "id": "ma_ucd_eljadida",
+        "name": "Université Chouaib Doukkali",
+        "country": "Morocco", "region": "morocco", "city": "El Jadida",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Marine Biology", "Chemistry", "Physics", "Business Administration"],
+        "domains": ["science_research", "agriculture_food", "business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.ucd.ac.ma",
+        "notes": "Specialized public research programs capitalizing on coastal ecosystem profiles and chemical industries.",
+    },
+    {
+        "id": "ma_uh1_settat",
+        "name": "Université Hassan 1er",
+        "country": "Morocco", "region": "morocco", "city": "Settat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Nursing", "Physiotherapy", "Business Administration", "Computer Science", "Biomedical Sciences"],
+        "domains": ["medicine_health", "business_finance", "engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.uh1.ac.ma",
+        "notes": "Hosts highly sought-after public health sciences and biomedical training units.",
+    },
+    {
+        "id": "ma_uae_tetouan",
+        "name": "Université Abdelmalek Essaâdi",
+        "country": "Morocco", "region": "morocco", "city": "Tétouan / Tanger",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic", "Spanish"],
+        "fields": ["International Business", "Computer Science", "Telecommunications Engineering", "Law (LLB/JD)"],
+        "domains": ["business_finance", "engineering_tech", "law_politics"],
+        "scholarships_available": True,
+        "website": "https://www.uae.ac.ma",
+        "notes": "Strategic northern gateway university with strong ties to European academic frameworks.",
+    },
+    {
+        "id": "ma_usms_benimellal",
+        "name": "Université Sultan Moulay Slimane",
+        "country": "Morocco", "region": "morocco", "city": "Béni Mellal",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French", "Arabic"],
+        "fields": ["Agricultural Sciences", "Environmental Science", "Geography", "Information Technology"],
+        "domains": ["agriculture_food", "science_research", "engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.usms.ac.ma",
+        "notes": "Public institution focusing on agro-industrial development and environmental preservation tracking.",
+    },
 
-if st.session_state.step == 1:
-    st.subheader("Authentification Premium")
-    token = st.text_input("Code Promo / Token ($0) :", type="password")
-    if token == "Arwagiftorient":
-        if st.button("Démarrer le Profilage"):
-            st.session_state.step = 2
-            st.rerun()
+    # ---------------- ELITE PUBLIC INSTITUTES & CONCOURS NETWORKS ----------------
+    {
+        "id": "ma_ensa_network",
+        "name": "Écoles Nationales des Sciences Appliquées (ENSA Network)",
+        "country": "Morocco", "region": "morocco", "city": "Multi-city (Marrakech/Fès/Tanger/Oujda/etc.)",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 500],
+        "languages": ["French"],
+        "fields": ["Computer Science", "Civil Engineering", "Industrial Engineering", "Telecommunications Engineering", "Cybersecurity"],
+        "domains": ["engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.ensa.ac.ma",
+        "notes": "Highly selective national network of engineering schools accessible post-bac via a unified entrance exam (concours).",
+    },
+    {
+        "id": "ma_ensam_network",
+        "name": "Écoles Nationales Supérieures d'Arts et Métiers (ENSAM Network)",
+        "country": "Morocco", "region": "morocco", "city": "Meknès / Casablanca / Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 500],
+        "languages": ["French"],
+        "fields": ["Mechanical Engineering", "Industrial Engineering", "Robotics & Mechatronics", "Materials Science"],
+        "domains": ["engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.ensam-umi.ac.ma",
+        "notes": "Prestigious engineering network focused on heavy industries, mechanical layout, and automated industrial processing.",
+    },
+    {
+        "id": "ma_cpge",
+        "name": "Classes Préparatoires aux Grandes Écoles (CPGE Maroc)",
+        "country": "Morocco", "region": "morocco", "city": "National Network",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 200],
+        "languages": ["French"],
+        "fields": ["Mathematics", "Physics", "Engineering Sciences", "Commercial Frameworks"],
+        "domains": ["science_research", "engineering_tech", "business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.cpge.ac.ma",
+        "notes": "Elite 2-year intensive preparation program feeding directly into national and French top-tier engineering and business grand écoles.",
+    },
+    {
+        "id": "ma_inpt_rabat",
+        "name": "Institut National des Postes et Télécommunications (INPT)",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 800],
+        "languages": ["French", "English"],
+        "fields": ["Telecommunications Engineering", "Cybersecurity", "Artificial Intelligence & Data Science", "Cloud Computing"],
+        "domains": ["engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.inpt.ac.ma",
+        "notes": "Top-tier tech institute governed by ANRT, highly specialized in telecommunications and cutting-edge cyber infrastructures.",
+    },
+    {
+        "id": "ma_insea_rabat",
+        "name": "Institut National de Statistique et d'Économie Appliquée (INSEA)",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 800],
+        "languages": ["French"],
+        "fields": ["Business Analytics", "Economics", "Actuarial Science", "Artificial Intelligence & Data Science"],
+        "domains": ["business_finance", "engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.insea.ac.ma",
+        "notes": "Elite mathematical modeling and operational research hub producing top statistical and financial minds.",
+    },
+    {
+        "id": "ma_ensias_rabat",
+        "name": "École Nationale Supérieure d'Informatique et d'Analyse des Systèmes (ENSIAS)",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 800],
+        "languages": ["French", "English"],
+        "fields": ["Computer Science", "Software Engineering", "Artificial Intelligence & Data Science", "Cybersecurity"],
+        "domains": ["engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.ensias.ma",
+        "notes": "Morocco's premier elite IT engineering school, accessible via CNC after CPGE. Extreme technical prestige.",
+    },
+    {
+        "id": "ma_encg_network",
+        "name": "Écoles Nationales de Commerce et de Gestion (ENCG Network)",
+        "country": "Morocco", "region": "morocco", "city": "Multi-city (Casablanca/Settat/Tanger/Agadir/etc.)",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 400],
+        "languages": ["French", "English"],
+        "fields": ["Business Administration", "Marketing", "Finance", "Accounting", "International Business"],
+        "domains": ["business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.encg.ma",
+        "notes": "The leading public commerce network with a 5-year integrated syllabus, heavily integrated into regional job markets.",
+    },
 
-elif st.session_state.step == 2:
-    st.subheader("Générateur de Trajectoire")
-    domaine = st.selectbox("Choisir le Macro-Domaine :", list(DB.keys()))
-    note = st.slider("Moyenne au Bac :", 10.0, 20.0, 16.0)
-    besoin = st.selectbox("Besoin de financement :", ["100% Bourse", "Partiel", "Autonomie"])
-    
-    if st.button("Générer mon Mapping Universel"):
-        st.session_state.res = DB[domaine]
-        st.session_state.step = 3
-        st.rerun()
+    # ---------------- SPECIALIZED PUBLIC & PRIVATE ELITE SCHOOLS ----------------
+    {
+        "id": "ma_um6p",
+        "name": "Université Mohammed VI Polytechnique (UM6P)",
+        "country": "Morocco", "region": "morocco", "city": "Ben Guerir / Rabat / Casablanca",
+        "type": "Private", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 5000],
+        "languages": ["English", "French"],
+        "fields": ["Mechanical Engineering", "Artificial Intelligence & Data Science", "Agricultural Sciences", "Business Administration", "Industrial Engineering", "Public Policy"],
+        "domains": ["engineering_tech", "agriculture_food", "business_finance", "law_politics"],
+        "scholarships_available": True,
+        "website": "https://www.um6p.ma",
+        "notes": "State-of-the-art research ecosystem with exceptional endowment. Offers generous full-ride merit and social scholarships for top talent.",
+    },
+    {
+        "id": "ma_aui",
+        "name": "Al Akhawayn University in Ifrane (AUI)",
+        "country": "Morocco", "region": "morocco", "city": "Ifrane",
+        "type": "Private", "global_ranking_tier": "National",
+        "tuition_range_usd": [6000, 9000],
+        "languages": ["English"],
+        "fields": ["Computer Science", "Business Administration", "Communication Studies", "International Relations", "Engineering Sciences"],
+        "domains": ["engineering_tech", "business_finance", "social_humanities", "law_politics"],
+        "scholarships_available": True,
+        "website": "https://www.aui.ma",
+        "notes": "American-style liberal arts curriculum, full English environment with robust institutional aid and global networking options.",
+    },
+    {
+        "id": "ma_uir",
+        "name": "Université Internationale de Rabat (UIR)",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Private", "global_ranking_tier": "National",
+        "tuition_range_usd": [4000, 8000],
+        "languages": ["French", "English"],
+        "fields": ["Aerospace Engineering", "Business Administration", "Architecture", "Computer Science", "Political Science", "Dentistry"],
+        "domains": ["engineering_tech", "business_finance", "design_creative", "law_politics", "medicine_health"],
+        "scholarships_available": True,
+        "website": "https://www.uir.ac.ma",
+        "notes": "Semi-public state-partnered university providing advanced dual degrees with European and North American institutions.",
+    },
+    {
+        "id": "ma_ehtp",
+        "name": "École Hassania des Travaux Publics (EHTP)",
+        "country": "Morocco", "region": "morocco", "city": "Casablanca",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 1000],
+        "languages": ["French"],
+        "fields": ["Civil Engineering", "Computer Science", "Telecommunications Engineering", "Meteorology"],
+        "domains": ["engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.ehtp.ac.ma",
+        "notes": "Top-tier historic elite public engineering grande école, historically dominant in infrastructure and systems engineering.",
+    },
+    {
+        "id": "ma_emi",
+        "name": "École Mohammadia d'Ingénieurs (EMI)",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 800],
+        "languages": ["French"],
+        "fields": ["Civil Engineering", "Mechanical Engineering", "Electrical Engineering", "Industrial Engineering", "Computer Science"],
+        "domains": ["engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.emi.ac.ma",
+        "notes": "Morocco's oldest and legendary engineering grande école, operates under a military officer training model.",
+    },
+    {
+        "id": "ma_iscae",
+        "name": "ISCAE Casablanca (Institut Supérieur de Commerce et d'Administration des Entreprises)",
+        "country": "Morocco", "region": "morocco", "city": "Casablanca",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 2000],
+        "languages": ["French", "English"],
+        "fields": ["Business Administration", "Finance", "Marketing", "Accounting"],
+        "domains": ["business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.iscae.ma",
+        "notes": "The apex business institution in Morocco. Exceptionally competitive selective filter via specialized business concours.",
+    },
+    {
+        "id": "ma_enim",
+        "name": "École Nationale de l'Industrie Minérale (ENIM)",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 1000],
+        "languages": ["French"],
+        "fields": ["Mining Engineering", "Mechanical Engineering", "Industrial Engineering", "Environmental Science"],
+        "domains": ["engineering_tech", "science_research"],
+        "scholarships_available": True,
+        "website": "https://www.enim.ac.ma",
+        "notes": "Highly selective engineering school historically critical to mining, industrial operations, and energy resource management.",
+    },
+    {
+        "id": "ma_ena_rabat",
+        "name": "École Nationale d'Architecture de Rabat (ENA)",
+        "country": "Morocco", "region": "morocco", "city": "Rabat",
+        "type": "Public", "global_ranking_tier": "National",
+        "tuition_range_usd": [0, 1500],
+        "languages": ["French", "Arabic"],
+        "fields": ["Architecture", "Urban Planning"],
+        "domains": ["design_creative"],
+        "scholarships_available": True,
+        "website": "https://www.ena.ac.ma",
+        "notes": "Morocco's primary authority in architecture and territorial planning educational frameworks.",
+    },
+    {
+        "id": "ma_uemed_fes",
+        "name": "Université Euromed de Fès",
+        "country": "Morocco", "region": "morocco", "city": "Fès",
+        "type": "Private", "global_ranking_tier": "National",
+        "tuition_range_usd": [3500, 7000],
+        "languages": ["French", "English"],
+        "fields": ["Architecture", "Biomedical Engineering", "Artificial Intelligence & Data Science", "International Relations"],
+        "domains": ["design_creative", "engineering_tech", "law_politics"],
+        "scholarships_available": True,
+        "website": "https://www.ueuromed.org",
+        "notes": "Created under Royal Initiative, focusing on high-level integration across Euro-Mediterranean cultural and technical vectors.",
+    },
+    {
+        "id": "ma_mundiapolis",
+        "name": "Université Mundiapolis Casablanca",
+        "country": "Morocco", "region": "morocco", "city": "Casablanca",
+        "type": "Private", "global_ranking_tier": "Emerging",
+        "tuition_range_usd": [4000, 7500],
+        "languages": ["French", "English"],
+        "fields": ["Business Administration", "Software Engineering", "International Law", "Physiotherapy"],
+        "domains": ["business_finance", "engineering_tech", "law_politics", "medicine_health"],
+        "scholarships_available": True,
+        "website": "https://www.mundiapolis.ma",
+        "notes": "Strong focus on professional integration and flexible learning pathways within a modern corporate-aligned campus.",
+    },
+    {
+        "id": "ma_uic_casa",
+        "name": "Université Internationale de Casablanca (UIC)",
+        "country": "Morocco", "region": "morocco", "city": "Casablanca",
+        "type": "Private", "global_ranking_tier": "Emerging",
+        "tuition_range_usd": [4500, 8500],
+        "languages": ["French", "English"],
+        "fields": ["Medicine (MD)", "Mechanical Engineering", "Business Administration", "Hospitality Management"],
+        "domains": ["medicine_health", "engineering_tech", "business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.uic.ac.ma",
+        "notes": "Comprehensive private ecosystem with extensive health science facilities and global institutional networks.",
+    },
+    {
+        "id": "ma_upm_marrakech",
+        "name": "Université Privée de Marrakech (UPM)",
+        "country": "Morocco", "region": "morocco", "city": "Marrakech",
+        "type": "Private", "global_ranking_tier": "Emerging",
+        "tuition_range_usd": [3500, 7000],
+        "languages": ["French", "English"],
+        "fields": ["Tourism Management", "Hospitality Management", "Civil Engineering", "Medicine (MD)"],
+        "domains": ["business_finance", "engineering_tech", "medicine_health"],
+        "scholarships_available": True,
+        "website": "https://www.upm.ac.ma",
+        "notes": "Highly recognized for hospitality management and localized industrial tracking frameworks.",
+    },
 
-elif st.session_state.step == 3:
-    data = st.session_state.res
-    st.subheader("Ton Mapping Stratégique")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"<div class='card'><h3>🎓 Filières</h3>{', '.join(data['filières'])}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div class='card'><h3>🏛️ Universités</h3>{', '.join(data['unis'])}</div>", unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"<div class='card'><h3>💰 Bourses & Requirements</h3>{', '.join(data['bourses'])}<br><br><b>Requirements :</b><br>• IELTS/TOEFL<br>• Lettre de motivation<br>• Relevés de notes officiels</div>", unsafe_allow_html=True)
-    
-    if st.button("Relancer une analyse"): 
-        st.session_state.step = 2
-        st.rerun()
+    # ---------------- HISTORIC INTERNATIONALLY ALIGNED MIDDLE EAST RECORDS ----------------
+    {
+        "id": "ae_ku",
+        "name": "Khalifa University",
+        "country": "United Arab Emirates", "region": "middle_east", "city": "Abu Dhabi",
+        "type": "Public", "global_ranking_tier": "Top 500",
+        "tuition_range_usd": [0, 20000],
+        "languages": ["English"],
+        "fields": ["Aerospace Engineering", "Artificial Intelligence & Data Science", "Biomedical Engineering", "Mechanical Engineering", "Civil Engineering"],
+        "domains": ["engineering_tech", "medicine_health"],
+        "scholarships_available": True,
+        "website": "https://www.ku.ac.ae",
+        "notes": "Research-intensive STEM powerhouse, matching highly competitive student entries with expansive full funding.",
+    },
+    {
+        "id": "ae_nyuad",
+        "name": "NYU Abu Dhabi",
+        "country": "United Arab Emirates", "region": "middle_east", "city": "Abu Dhabi",
+        "type": "Private", "global_ranking_tier": "Top 100",
+        "tuition_range_usd": [0, 0],
+        "languages": ["English"],
+        "fields": ["Computer Science", "Economics", "Film & Cinematography", "Biology", "International Relations"],
+        "domains": ["engineering_tech", "business_finance", "design_creative", "science_research", "law_politics"],
+        "scholarships_available": True,
+        "website": "https://nyuad.nyu.edu",
+        "notes": "Elite branch campus, highly selective admissions process matching global profiles with complete financial coverage profiles.",
+    },
+    {
+        "id": "sa_kaust",
+        "name": "King Abdullah University of Science and Technology (KAUST)",
+        "country": "Saudi Arabia", "region": "middle_east", "city": "Thuwal",
+        "type": "Public", "global_ranking_tier": "Top 500",
+        "tuition_range_usd": [0, 0],
+        "languages": ["English"],
+        "fields": ["Artificial Intelligence & Data Science", "Environmental Science", "Biotechnology", "Chemical Engineering", "Marine Biology"],
+        "domains": ["engineering_tech", "science_research", "agriculture_food"],
+        "scholarships_available": True,
+        "website": "https://www.kaust.edu.sa",
+        "notes": "Exclusively postgraduate setup offering unparalleled research infrastructure alongside comprehensive living stipends.",
+    }
+]
+
+# ==============================================================================
+# 2. EUROPE REGION (FRANCE, GERMANY, UK, NETHERLANDS, SPAIN, ITALY, ETC.)
+# ==============================================================================
+
+UNIVERSITIES_EUROPE = [
+    # ---------------- FRANCE ----------------
+    {
+        "id": "fr_sorbonne",
+        "name": "Sorbonne University",
+        "country": "France", "region": "europe", "city": "Paris",
+        "type": "Public", "global_ranking_tier": "Top 100",
+        "tuition_range_usd": [200, 4000],
+        "languages": ["French", "English"],
+        "fields": ["Medicine (MD)", "Physics", "Literature", "Mathematics", "Chemistry"],
+        "domains": ["medicine_health", "science_research", "social_humanities"],
+        "scholarships_available": True,
+        "website": "https://www.sorbonne-universite.fr",
+        "notes": "Historic, deeply prestigious, very low infrastructure costs for EU and select global demographics via bilateral treaties.",
+    },
+    {
+        "id": "fr_psl",
+        "name": "Paris Sciences et Lettres (PSL University)",
+        "country": "France", "region": "europe", "city": "Paris",
+        "type": "Public", "global_ranking_tier": "Top 50",
+        "tuition_range_usd": [300, 5000],
+        "languages": ["French", "English"],
+        "fields": ["Physics", "Economics", "Computer Science", "Fine Arts", "Mathematics"],
+        "domains": ["science_research", "business_finance", "engineering_tech", "design_creative"],
+        "scholarships_available": True,
+        "website": "https://www.psl.eu",
+        "notes": "Elite consolidation of standard-setting entities like ENS, Paris-Dauphine, and MINES ParisTech.",
+    },
+    {
+        "id": "fr_polytechnique",
+        "name": "École Polytechnique",
+        "country": "France", "region": "europe", "city": "Palaiseau",
+        "type": "Public", "global_ranking_tier": "Top 100",
+        "tuition_range_usd": [0, 15000],
+        "languages": ["French", "English"],
+        "fields": ["Mechanical Engineering", "Computer Science", "Artificial Intelligence & Data Science", "Aerospace Engineering", "Mathematics"],
+        "domains": ["engineering_tech", "science_research"],
+        "scholarships_available": True,
+        "website": "https://www.polytechnique.edu",
+        "notes": "The apex engineering Grande École. High quantitative screening parameters.",
+    },
+    {
+        "id": "fr_sciencespo",
+        "name": "Sciences Po Paris",
+        "country": "France", "region": "europe", "city": "Paris",
+        "type": "Public", "global_ranking_tier": "Top 50",
+        "tuition_range_usd": [4000, 16000],
+        "languages": ["French", "English"],
+        "fields": ["Political Science", "International Relations", "Public Policy", "Economics", "Law (LLB/JD)"],
+        "domains": ["law_politics", "business_finance", "social_humanities"],
+        "scholarships_available": True,
+        "website": "https://www.sciencespo.fr",
+        "notes": "Premier training engine for diplomacy, intelligence, and political sciences. Sliding tuition scale.",
+    },
+    {
+        "id": "fr_hec",
+        "name": "HEC Paris",
+        "country": "France", "region": "europe", "city": "Jouy-en-Josas",
+        "type": "Private", "global_ranking_tier": "Top 50",
+        "tuition_range_usd": [18000, 30000],
+        "languages": ["French", "English"],
+        "fields": ["Business Administration", "Finance", "Entrepreneurship", "Marketing"],
+        "domains": ["business_finance"],
+        "scholarships_available": True,
+        "website": "https://www.hec.edu",
+        "notes": "Consistently ranked as the best business management institution across continental Europe.",
+    },
+
+    # ---------------- GERMANY ----------------
+    {
+        "id": "de_tum",
+        "name": "Technical University of Munich (TUM)",
+        "country": "Germany", "region": "europe", "city": "Munich",
+        "type": "Public", "global_ranking_tier": "Top 50",
+        "tuition_range_usd": [0, 1500],
+        "languages": ["German", "English"],
+        "fields": ["Mechanical Engineering", "Computer Science", "Artificial Intelligence & Data Science", "Electrical Engineering", "Architecture"],
+        "domains": ["engineering_tech", "design_creative"],
+        "scholarships_available": True,
+        "website": "https://www.tum.de",
+        "notes": "A leading continental focal point for industrial technology innovation and enterprise integration.",
+    },
+    {
+        "id": "de_rwth",
+        "name": "RWTH Aachen University",
+        "country": "Germany", "region": "europe", "city": "Aachen",
+        "type": "Public", "global_ranking_tier": "Top 200",
+        "tuition_range_usd": [0, 700],
+        "languages": ["German", "English"],
+        "fields": ["Mechanical Engineering", "Electrical Engineering", "Computer Science", "Civil Engineering", "Industrial Engineering"],
+        "domains": ["engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.rwth-aachen.de",
+        "notes": "A heavy-industry structured technical framework with near-zero base tuition costs.",
+    },
+
+    # ---------------- UNITED KINGDOM ----------------
+    {
+        "id": "uk_oxford",
+        "name": "University of Oxford",
+        "country": "United Kingdom", "region": "europe", "city": "Oxford",
+        "type": "Public", "global_ranking_tier": "Top 10",
+        "tuition_range_usd": [12000, 45000],
+        "languages": ["English"],
+        "fields": ["Medicine (MD)", "Law (LLB/JD)", "Philosophy", "Economics", "Computer Science"],
+        "domains": ["medicine_health", "law_politics", "social_humanities", "business_finance", "engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.ox.ac.uk",
+        "notes": "World-leading collegiate institution, featuring selective full-ride schemes like Rhodes and Clarendon.",
+    },
+    {
+        "id": "uk_cambridge",
+        "name": "University of Cambridge",
+        "country": "United Kingdom", "region": "europe", "city": "Cambridge",
+        "type": "Public", "global_ranking_tier": "Top 10",
+        "tuition_range_usd": [12000, 45000],
+        "languages": ["English"],
+        "fields": ["Mathematics", "Physics", "Medicine (MD)", "Architecture", "Computer Science"],
+        "domains": ["science_research", "medicine_health", "design_creative", "engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.cam.ac.uk",
+        "notes": "Unrivaled math, scientific and technological tracking systems.",
+    },
+
+    # ---------------- NETHERLANDS ----------------
+    {
+        "id": "nl_tudelft",
+        "name": "Delft University of Technology (TU Delft)",
+        "country": "Netherlands", "region": "europe", "city": "Delft",
+        "type": "Public", "global_ranking_tier": "Top 50",
+        "tuition_range_usd": [2500, 18000],
+        "languages": ["English", "Dutch"],
+        "fields": ["Aerospace Engineering", "Architecture", "Civil Engineering", "Industrial / Product Design", "Artificial Intelligence & Data Science"],
+        "domains": ["engineering_tech", "design_creative"],
+        "scholarships_available": True,
+        "website": "https://www.tudelft.nl",
+        "notes": "A crucial engineering domain for spatial development, structural designs and computational frameworks.",
+    },
+    {
+        "id": "nl_wageningen",
+        "name": "Wageningen University & Research",
+        "country": "Netherlands", "region": "europe", "city": "Wageningen",
+        "type": "Public", "global_ranking_tier": "Top 100",
+        "tuition_range_usd": [2500, 17000],
+        "languages": ["English"],
+        "fields": ["Agricultural Sciences", "Food Science & Technology", "Environmental Science", "Biotechnology"],
+        "domains": ["agriculture_food", "science_research"],
+        "scholarships_available": True,
+        "website": "https://www.wur.nl",
+        "notes": "Ranked #1 globally for agricultural setups, biological innovations, and sustainable ecology management.",
+    },
+
+    # ---------------- ITALY & SPAIN ----------------
+    {
+        "id": "it_polimi",
+        "name": "Politecnico di Milano",
+        "country": "Italy", "region": "europe", "city": "Milan",
+        "type": "Public", "global_ranking_tier": "Top 150",
+        "tuition_range_usd": [1000, 4000],
+        "languages": ["Italian", "English"],
+        "fields": ["Architecture", "Industrial / Product Design", "Mechanical Engineering", "Civil Engineering", "Computer Science"],
+        "domains": ["design_creative", "engineering_tech"],
+        "scholarships_available": True,
+        "website": "https://www.polimi.it",
+        "notes": "Excellent design-engineering nexus, tuition calculations map to family wealth inputs.",
+    },
+    {
+        "id": "it_bocconi",
+        "name": "Bocconi University",
+        "country": "Italy", "region": "europe", "city": "Milan",
+        "type": "Private", "global_ranking_tier": "Top 100",
+        "tuition_range_usd": [14000, 18000],
+        "languages": ["English", "Italian"],
+        "fields": ["Economics", "Business Administration", "Finance", "Law (LLB/JD)"],
+        "domains": ["business_finance", "law_politics"],
+        "scholarships_available": True,
+        "website": "https://www.unibocconi.eu",
+        "notes": "Private apex framework for macro-financial structures and commercial strategy tracking across EMEA.",
+    },
+    {
+        "id": "ch_eth",
+        "name": "ETH Zurich",
+        "country": "Switzerland", "region": "europe", "city": "Zurich",
+        "type": "Public", "global_ranking_tier": "Top 20",
+        "tuition_range_usd": [1500, 3000],
+        "languages": ["German", "English"],
+        "fields": ["Computer Science", "Mechanical Engineering", "Architecture", "Artificial Intelligence & Data Science", "Physics"],
+        "domains": ["engineering_tech", "design_creative", "science_research"],
+        "scholarships_available": True,
+        "website": "https://ethz.ch",
+        "notes": "World top-10 tier for fundamental sciences and operational systems engineering, maintaining remarkably low cost structures.",
+    }
+]
